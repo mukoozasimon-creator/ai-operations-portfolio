@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Adoption Engine | The Practice Loop</title>
+<meta name="description" content="An interactive model for helping a team adopt AI one small, checked job at a time. By Simon Mukooza.">
+<meta name="theme-color" content="#060b1e">
+<link rel="icon" href="favicon.svg?v=20260816" type="image/svg+xml">
+<link rel="alternate icon" href="favicon-48.png?v=20260816" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260816" sizes="180x180">
+<meta property="og:site_name" content="AI Adoption Engine">
+<meta property="og:title" content="AI Adoption Engine | The Practice Loop">
+<meta property="og:description" content="An interactive model for helping a team adopt AI one small, checked job at a time.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ai-adoption-engine.netlify.app/">
+<meta property="og:image" content="https://ai-adoption-engine.netlify.app/og.png?v=20260816">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The four-step practice loop: Try it, Check it, Share it, Improve it. By Simon Mukooza.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Adoption Engine | The Practice Loop">
+<meta name="twitter:description" content="An interactive model for helping a team adopt AI one small, checked job at a time.">
+<meta name="twitter:image" content="https://ai-adoption-engine.netlify.app/og.png?v=20260816">
+<style>
+@font-face { font-family:"Nunito"; src:url("fonts/nunito-400.woff2") format("woff2"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Nunito"; src:url("fonts/nunito-600.woff2") format("woff2"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Nunito"; src:url("fonts/nunito-700.woff2") format("woff2"); font-weight:700; font-style:normal; font-display:swap; }
+@font-face { font-family:"Nunito"; src:url("fonts/nunito-800.woff2") format("woff2"); font-weight:800; font-style:normal; font-display:swap; }
+:root { --night:#060b1e; --navy:#0a1230; --ink:#eef4ff; --muted:#9fabc6; --line:#a88aff42; --violet:#9b78ff; --aqua:#67e5ff; --mint:#8ce6c4; --sun:#f1c94e; --card:#111a3c; }
+* { box-sizing:border-box; }
+html { background:var(--night); }
+body { min-width:320px; margin:0; color:var(--ink); background:radial-gradient(circle at 51% 42%,#182d6838 0 17%,transparent 42%),linear-gradient(125deg,#05091a,#0b1433 60%,#060a1b); font-family:"Lora",Georgia,serif; font-synthesis:none; }
+button { font:inherit; }
+.app-shell { position:relative; min-height:100vh; overflow:hidden; }
+/* Carries the padding app-shell used to own directly. It has to be the
+   padded box (not app-shell itself) because the genie transition puts a
+   transform on this element -- and a transform makes its OWN padding box
+   the reference frame for position:fixed descendants (the masthead, the
+   quick-nav bar). Since this element's border box still sits flush at
+   (0,0) either way (padding never moves an element's own border box),
+   the masthead/nav do not jump when that reference frame switches from
+   the real viewport to this element the instant the animation starts. */
+.viewport-frame { padding:30px clamp(20px,4vw,68px) 28px; }
+.app-shell::before,.app-shell::after { content:""; position:absolute; border-radius:50%; pointer-events:none; filter:blur(1px); }.app-shell::before { top:-220px; right:-130px; width:620px; height:620px; border:1px solid #8a69ff2e; box-shadow:0 0 150px #6c56ed18; }.app-shell::after { bottom:-270px; left:20%; width:600px; height:600px; border:1px solid #4bcbff1c; }
+.masthead,.intro,.engine-layout,.principles { position:relative; z-index:1; max-width:1440px; margin-inline:auto; }
+.masthead { display:flex; align-items:center; justify-content:space-between; gap:18px; }.brand-lockup { display:inline-flex; align-items:center; gap:11px; font-size:16px; font-weight:700; letter-spacing:-.045em; }.brand-mark { width:12px; height:12px; border:2px solid var(--aqua); border-radius:50%; box-shadow:0 0 0 5px #67e5ff16,0 0 24px #67e5ff88; }.masthead > p { margin:0; color:var(--aqua); font-size:10px; letter-spacing:.12em; }
+.intro { max-width:850px; margin-top:clamp(58px,10vw,128px); }.eyebrow { margin:0; color:var(--aqua); font-size:10px; font-weight:600; letter-spacing:.13em; line-height:1.3; }.intro h1 { max-width:790px; margin:16px 0 20px; font-size:clamp(34px,5vw,70px); font-weight:600; letter-spacing:-.09em; line-height:.98; }.intro > p:last-child { max-width:720px; margin:0; color:var(--muted); font-size:14px; line-height:1.75; }
+.engine-layout { display:grid; grid-template-columns:minmax(190px,.78fr) minmax(430px,1.45fr) minmax(270px,.9fr); gap:22px; align-items:stretch; margin-top:clamp(40px,7vw,80px); }
+.team-panel,.loop-panel,.practice-panel { min-width:0; border:1px solid var(--line); border-radius:22px; background:linear-gradient(145deg,#101a3de6,#0b112bd9); box-shadow:inset 0 1px #ffffff12,0 24px 70px #0000003b; }
+.team-panel { display:flex; flex-direction:column; padding:22px 16px 17px; }.panel-heading h2,.panel-head h2,.madlibs-head h2 { margin:7px 0 0; font-size:17px; font-weight:500; letter-spacing:-.06em; line-height:1.2; }.team-list { display:grid; gap:9px; margin-top:28px; }.team-button { width:100%; border:1px solid #9b7bff26; border-radius:12px; color:#dce4ff; background:#0e1736; cursor:pointer; display:grid; grid-template-columns:28px minmax(0,1fr) auto; gap:9px; align-items:center; min-height:58px; padding:10px 11px; text-align:left; font-size:11px; transition:transform .65s cubic-bezier(.34,1.56,.64,1),background .18s ease,border-color .18s ease,box-shadow .18s ease; }.team-button:hover,.team-button:focus-visible { outline:none; border-color:#a486ffb8; background:#15224e; transform:translateY(-2px); }.team-button.selected { border-color:#aa8bff; background:linear-gradient(115deg,#241b5e,#17214d); box-shadow:0 0 0 1px #aa8bff42,0 0 26px #8e6bff45; }.team-code { color:#d7c8ff; font-size:9px; }.button-arrow { color:#d6caff; font-size:18px; line-height:1; }.reference-note { margin:auto 4px 0; padding-top:22px; color:#7f8aa8; font-size:9px; line-height:1.65; }
+
+/* ------------------------------------------------------ loop: mini path */
+.loop-panel { min-height:530px; padding:25px clamp(16px,3vw,37px) 22px; }
+.panel-head { display:flex; flex-direction:column; gap:0; }
+.mini-path { position:relative; margin-top:22px; padding:8px 2px 4px; max-width:520px; margin-inline:auto; width:100%; }
+.mini-line { position:absolute; left:5%; right:5%; top:23px; height:2px;
+  background:repeating-linear-gradient(to right,#a88aff70 0 6px,transparent 6px 13px); }
+.mini-row { position:relative; z-index:1; display:flex; justify-content:space-between; gap:6px; }
+.mini-stone {
+  display:flex; flex-direction:column; align-items:center; gap:8px; background:none; border:none; color:inherit;
+  cursor:pointer; font:inherit; flex:1 1 0; padding:2px;
+  transition:transform .65s cubic-bezier(.34,1.56,.64,1);
+}
+.mini-stone:hover,.mini-stone:focus-visible { outline:none; }
+.mini-stone:hover .mini-marker,.mini-stone:focus-visible .mini-marker { filter:brightness(1.15); }
+.mini-marker {
+  display:grid; place-items:center; width:46px; height:46px; border-radius:50%;
+  border:1px solid #a88aff4a; background:linear-gradient(145deg,#171f45,#0d1430); color:#b9c2e0;
+  font-size:12px; font-weight:800; box-shadow:0 6px 16px #0007;
+  transition:border-color .2s ease,box-shadow .2s ease,color .2s ease,background .2s ease,filter .15s ease;
+}
+.mini-stone.current .mini-marker { border-color:#f4efff; color:#fff; background:linear-gradient(145deg,#503bb0,#2d235d);
+  box-shadow:0 0 0 4px #a98aff26,0 0 20px #8a67ffaa; }
+.mini-label { font-size:11px; font-weight:700; color:#c3cbe4; text-align:center; line-height:1.25; }
+.mini-stone.current .mini-label { color:#f4f2ff; }
+.stage-readout { display:grid; grid-template-columns:auto minmax(0,1fr); gap:11px; align-items:start; max-width:570px; margin:24px auto 0; padding:15px 17px; border:1px solid #a58cff37; border-radius:14px; background:#070d23b8; }.readout-number { color:var(--aqua); font-size:10px; }.stage-readout p { margin:0; color:#c1cbe4; font-size:11px; line-height:1.65; }
+
+/* ---------------------------------------------------- plan: the mad-lib */
+.practice-panel { padding:22px; }
+.madlibs-head { display:flex; flex-direction:column; align-items:flex-start; gap:0; }
+/* this plan is only ever for ONE of the four practice stages -- say so, so
+   the team title doesn't read as the whole job when it's really just what
+   one stage looks like for that team. */
+.stage-tag {
+  display:inline-flex; align-items:center; gap:7px; margin:12px 0 0; padding:5px 12px 5px 9px;
+  border-radius:999px; border:1px solid #a88aff55; background:#a98aff14; color:#d9caff;
+  font-size:10px; font-weight:700;
+}
+.stage-tag::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--violet); box-shadow:0 0 8px #9b78ffb0; }
+.madlibs-card {
+  margin-top:19px; border:1px solid #8fa4de24; border-radius:14px; background:#0a1330ad; padding:16px 15px;
+}
+.madlibs-sentence { margin:0; font-size:12.5px; line-height:1.95; color:#dbe2f7; }
+.blank {
+  display:inline; padding:2px 8px; margin:0 1px; border-radius:8px; font-weight:800; cursor:pointer;
+  border-bottom:2px dashed var(--aqua); background:#67e5ff14; color:#eaf9ff;
+  transition:background .2s ease,transform .15s cubic-bezier(.34,1.56,.64,1);
+}
+.blank:hover,.blank:focus-visible { outline:none; background:#67e5ff24; }
+.blank.b-checkpoint { border-bottom-color:var(--mint); background:#8ce6c418; color:#e9fff5; }
+.blank.b-checkpoint:hover,.blank.b-checkpoint:focus-visible { background:#8ce6c428; }
+.blank.b-review { border-bottom-color:var(--sun); background:#f1c94e18; color:#fff8e4; }
+.blank.b-review:hover,.blank.b-review:focus-visible { background:#f1c94e28; }
+.blank.open { background:#67e5ff30; }
+.blank.b-checkpoint.open { background:#8ce6c430; }
+.blank.b-review.open { background:#f1c94e30; }
+/* tapping a blank actually does something: it opens a one-line answer to
+   "why does it say that" -- which earlier pick this fact came from -- right
+   under the sentence. Functional, not just a decorative highlight. */
+.blank-detail {
+  max-height:0; opacity:0; overflow:hidden; margin-top:0;
+  border-left:3px solid var(--aqua); padding-left:0; font-size:11px; color:#c7d0e8; line-height:1.55;
+  transition:max-height .3s ease,opacity .25s ease,margin-top .3s ease,padding .3s ease;
+}
+.blank-detail.open { max-height:90px; opacity:1; margin-top:12px; padding:8px 0 8px 12px; }
+.blank-detail.b-checkpoint { border-left-color:var(--mint); }
+.blank-detail.b-review { border-left-color:var(--sun); }
+.blank-detail strong { color:#eef4ff; }
+.madlibs-hint { margin:12px 0 0; color:#8892ad; font-size:9px; }
+
+.next-action { width:100%; margin-top:14px; border:1px solid #9a7fffa0; border-radius:11px; color:#17102f; background:#a98aff; cursor:pointer; display:flex; align-items:center; justify-content:space-between; padding:12px 13px; font-size:10px; font-weight:600; transition:transform .65s cubic-bezier(.34,1.56,.64,1),background .16s ease; }.next-action:hover,.next-action:focus-visible { outline:none; background:#c1adff; transform:translateY(-2px); }.next-action span { font-size:17px; font-weight:400; }
+.next-action-result { max-height:0; margin-top:0; padding:0 12px; border:1px solid transparent; border-radius:11px; color:#d7e4f8; background:#0c1739; overflow:hidden; opacity:0; transition:max-height .28s ease,opacity .22s ease,margin-top .28s ease,padding .28s ease,border-color .22s ease; }
+.next-action-result.open { max-height:420px; margin-top:10px; padding:12px; border-color:#6de5ff42; opacity:1; }
+.next-action-result .eyebrow { font-size:8px; }
+.next-action-text { margin:7px 0 0; font-size:10px; line-height:1.6; color:#d7e4f8; }
+.copy-tip {
+  margin-top:11px; display:inline-flex; align-items:center; gap:6px; appearance:none;
+  border:1px solid #6de5ff42; border-radius:999px; background:#0f1c44; color:#8fe3ff;
+  padding:7px 13px 7px 11px; font:inherit; font-size:9px; font-weight:700; cursor:pointer;
+  transition:transform .65s cubic-bezier(.34,1.56,.64,1),background .15s ease,border-color .15s ease,color .15s ease;
+}
+.copy-tip:hover,.copy-tip:focus-visible { outline:none; background:#132456; }
+.copy-tip.copied { border-color:#8ce6c4a0; color:#8ce6c4; background:#0f2436cc; }
+.copy-tip-icon,.copy-tip svg { flex:0 0 auto; }
+/* the review clause of the mad-lib is shorthand, not self-explanatory --
+   this is where the whole assembled sentence gets translated into plain
+   talk, right under the actionable next-move reveal it belongs to. */
+.means-block { margin-top:14px; padding-top:13px; border-top:1px solid #ffffff14; }
+.means-eyebrow { color:#c7bfff; font-size:8px; }
+.means-text { margin:7px 0 0; color:#b7c1de; font-size:9.5px; line-height:1.6; }
+
+.principles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:20px; }.principles p { min-height:62px; margin:0; border-top:1px solid #95a9e733; color:#b6c0d7; display:flex; align-items:center; gap:11px; padding:12px 5px; font-size:9px; line-height:1.6; }.principles span { color:#ecdc73; font-size:9px; }
+.skip-link { position:fixed; top:-100px; left:12px; z-index:10; color:#0b1230; background:#fff; padding:10px 13px; text-decoration:none; }.skip-link:focus { top:12px; }
+@media (max-width:1080px) { .engine-layout { grid-template-columns:minmax(185px,.7fr) minmax(390px,1.3fr); }.practice-panel { grid-column:1 / -1; } }
+@media (max-width:700px) {
+  .viewport-frame { padding:104px 16px 22px; }
+  .masthead { position:fixed; top:0; left:0; right:0; z-index:6; height:46px; margin:0; padding:0 16px;
+    background:#060b1ee6; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); border-bottom:1px solid #a88aff1f; }
+  .masthead > p { display:none; }
+  .intro { margin-top:0; }
+  .intro h1 { font-size:37px; }
+  .intro > p:last-child { font-size:12px; }
+  .engine-layout { grid-template-columns:1fr; gap:14px; margin-top:14px; }
+  .team-panel { padding:18px; }
+  .team-list { grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-top:18px; }
+  .team-button { grid-template-columns:1fr; min-height:78px; gap:5px; padding:9px; font-size:9px; }
+  .button-arrow { display:none; }
+  .reference-note { display:none; }
+  .loop-panel { min-height:0; padding:20px 10px 14px; }
+  .panel-head { padding-inline:8px; }
+  .practice-panel { display:block; padding:18px; }
+  .next-action-result.open { margin-top:10px; }
+  .principles { grid-template-columns:1fr; gap:0; margin-top:10px; }
+  .principles p { min-height:48px; }
+}
+
+/* Wayfinding + tap-feedback additions: make the connection between a tap and
+   its result visible instead of silent, especially on a phone where the panel
+   that changes is out of view when the panel you tapped is on screen. */
+html { scroll-behavior:smooth; }
+#step-choose,#step-loop,#step-plan { scroll-margin-top:84px; }
+
+.press-hint { margin:12px auto 0; width:max-content; max-width:100%; color:#8fe3ff; border:1px solid #67e5ff3d; border-radius:999px; padding:7px 14px; background:#67e5ff0f; display:flex; align-items:center; gap:8px; font-size:9px; transition:opacity .25s ease; }
+.press-hint svg { flex:0 0 auto; }
+.press-hint.used { opacity:.3; }
+.team-hint { margin:14px 4px 0; width:auto; }
+.loop-hint { margin-top:14px; }
+
+.team-panel.flash,.loop-panel.flash,.practice-panel.flash { animation:plan-flash 900ms ease-out; }
+@keyframes plan-flash {
+  0% { box-shadow:inset 0 1px #ffffff12,0 24px 70px #0000003b,0 0 0 0 #67e5ff00; }
+  25% { box-shadow:inset 0 1px #ffffff12,0 24px 70px #0000003b,0 0 0 2px #67e5ffcc,0 0 46px 6px #67e5ff55; }
+  100% { box-shadow:inset 0 1px #ffffff12,0 24px 70px #0000003b,0 0 0 0 #67e5ff00; }
+}
+
+/* Spotlight: only the panel whose turn it is stays at full strength. The
+   other two sit dimmed and slightly soft-focused, so the page never asks you
+   to read three equally loud panels before you know which one matters now.
+   Nothing is ever disabled, only quieted, so every control stays reachable
+   by click or by keyboard at any time; hovering or focusing a dimmed panel
+   lifts it partway so it never reads as locked. */
+.team-panel,.loop-panel,.practice-panel { transition:opacity .4s ease,filter .4s ease,box-shadow .4s ease; }
+.engine-layout[data-focus] .team-panel,
+.engine-layout[data-focus] .loop-panel,
+.engine-layout[data-focus] .practice-panel { opacity:.4; filter:blur(1.5px) saturate(.65); }
+.engine-layout[data-focus] .team-panel:hover,
+.engine-layout[data-focus] .team-panel:focus-within,
+.engine-layout[data-focus] .loop-panel:hover,
+.engine-layout[data-focus] .loop-panel:focus-within,
+.engine-layout[data-focus] .practice-panel:hover,
+.engine-layout[data-focus] .practice-panel:focus-within { opacity:.78; filter:blur(.4px) saturate(.85); }
+.engine-layout[data-focus="choose"] .team-panel,
+.engine-layout[data-focus="loop"] .loop-panel,
+.engine-layout[data-focus="plan"] .practice-panel {
+  opacity:1 !important; filter:none !important;
+  box-shadow:inset 0 1px #ffffff12,0 24px 70px #0000003b,0 0 0 1px #67e5ff3d,0 0 60px 4px #67e5ff1a;
+}
+
+.quick-nav { display:none; }
+.quick-nav-label { display:none; }
+.back-to-map { display:none; }
+@media (max-width:700px) {
+  .quick-nav { position:fixed; top:46px; left:0; right:0; z-index:6; display:flex; align-items:center; margin:0; padding:8px 16px; background:#060b1ee6; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); border-bottom:1px solid #a88aff2e; }
+  .app-shell[data-screen="path"] .quick-nav-label { display:block; color:#8b96b8; font-size:11px; }
+  .app-shell[data-screen="step"] .back-to-map {
+    position:relative; display:inline-flex; align-items:center; gap:7px; appearance:none; -webkit-appearance:none;
+    padding:8px 14px 8px 11px; border-radius:999px; border:1px solid #a88aff33; color:#dce4ff;
+    background:#141c40; cursor:pointer; font:inherit; font-size:12px; font-weight:600;
+    transition:transform .65s cubic-bezier(.34,1.56,.64,1),background .15s ease,border-color .15s ease;
+  }
+  .back-to-map span { font-size:14px; }
+  /* one-time "this is your way back" teach: the pill flashes like a real
+     camera bulb the very first time it appears (never again -- see
+     pulseMapOnce in page.tsx). Two things sell "flash" instead of "soft
+     glow": the pill itself blows out to white-hot for an instant (like the
+     bulb is right behind it), and a wide shockwave ring blasts outward from
+     it at the same moment -- both peak almost immediately, then decay, the
+     way a real flash does rather than a fade easing in. */
+  .back-to-map.pulse { animation:mapButtonFlash .9s cubic-bezier(.11,.9,.2,1); }
+  @keyframes mapButtonFlash {
+    0% { filter:brightness(1) saturate(1); transform:scale(1); }
+    5% { filter:brightness(3.2) saturate(0); transform:scale(1.16); }
+    22% { filter:brightness(1.35) saturate(.7); transform:scale(1.02); }
+    100% { filter:brightness(1) saturate(1); transform:scale(1); }
+  }
+  .back-to-map .glow-ring {
+    position:absolute; inset:-26px; border-radius:999px; pointer-events:none; opacity:0;
+    background:radial-gradient(circle, #ffffff 0%, #ffffff 22%, #eef8ff 42%, #67e5ffcc 62%, transparent 78%);
+    box-shadow:0 0 0 4px #ffffffe6,0 0 46px 14px #67e5ff99,0 0 110px 46px #67e5ff4a;
+  }
+  .back-to-map.pulse .glow-ring { animation:mapPulse .9s cubic-bezier(.11,.9,.2,1); }
+  @keyframes mapPulse {
+    0% { opacity:0; transform:scale(.35); }
+    5% { opacity:1; transform:scale(.75); }
+    16% { opacity:1; transform:scale(1.05); }
+    100% { opacity:0; transform:scale(2.6); }
+  }
+  .team-hint { margin-top:12px; }
+}
+
+/* One screen at a time on a phone: the step you have not reached yet is not
+   a dimmed preview, it is simply not on screen. Tapping an earlier pill in
+   the fixed header brings that screen back exactly as you left it -- your
+   picks are not reset, only which screen is showing changes. */
+@media (max-width:700px) {
+  .app-shell[data-screen] .intro-copy,
+  .app-shell[data-screen] .team-panel,
+  .app-shell[data-screen] .loop-panel,
+  .app-shell[data-screen] .practice-panel,
+  .app-shell[data-screen] .principles,
+  .app-shell[data-screen] .path-map { display:none; }
+
+  .app-shell[data-screen="path"] .intro-copy { display:block; }
+  .app-shell[data-screen="path"] .path-map { display:flex; }
+
+  .app-shell[data-screen="step"][data-focus="choose"] .team-panel { display:flex; }
+  .app-shell[data-screen="step"][data-focus="loop"] .loop-panel { display:block; }
+  .app-shell[data-screen="step"][data-focus="plan"] .practice-panel { display:block; }
+  .app-shell[data-screen="step"][data-focus="plan"] .principles { display:grid; }
+}
+
+/* The screen-change motion itself, mobile only: whichever panel is on
+   screen right now plays "exit" the instant a tap starts a transition
+   away from it (JS adds the class, see playExit in page.tsx); the panel
+   that becomes visible a beat later plays "enter" from its very first
+   painted frame, so there is no pop-in flash between the two. "genie"
+   is reserved for the two moves that actually touch the Map pill --
+   leaving it, returning to it -- everything else is a plain "advance"
+   slide, because a step-to-step pick is progress along the path, not a
+   trip back to the button, and must not look like one. */
+@media (max-width:700px) {
+  .path-map, .team-panel, .loop-panel, .practice-panel { transform-origin:46px -26px; }
+  /* Real value is set inline by setGenieOrigin() in page.tsx, measured off
+     the actual Map pill each time -- this is only the pre-JS/fallback
+     value, kept roughly where the pill sits (top of the shell, just under
+     the masthead). */
+  .viewport-frame { transform-origin:46px 68px; }
+  .screen-exit-genie { animation:screenCollapse .9s cubic-bezier(.6,0,.85,0) forwards; }
+  .screen-enter-genie { animation:screenExpand 1.1s cubic-bezier(.22,1.4,.4,1); }
+  .screen-exit-advance { animation:screenAdvanceOut .3s cubic-bezier(.4,0,.2,1) forwards; }
+  .screen-enter-advance { animation:screenAdvanceIn .4s cubic-bezier(.24,1.2,.4,1); }
+  /* Mirror image of the pair above, used only for a swipe-back move
+     (plan -> loop, loop -> choose): the outgoing panel exits toward the
+     right instead of the left, the incoming one grows in from the left
+     instead of the right, so "back" reads as the reverse of "forward"
+     rather than a repeat of it. */
+  .screen-exit-advance-back { animation:screenAdvanceOutBack .3s cubic-bezier(.4,0,.2,1) forwards; }
+  .screen-enter-advance-back { animation:screenAdvanceInBack .4s cubic-bezier(.24,1.2,.4,1); }
+  @keyframes screenCollapse { from { transform:scale(1); opacity:1; } to { transform:scale(.02); opacity:0; } }
+  @keyframes screenExpand { from { transform:scale(.02); opacity:0; } to { transform:scale(1); opacity:1; } }
+  @keyframes screenAdvanceOut { from { transform:translateX(0) scale(1); opacity:1; } to { transform:translateX(-22px) scale(.98); opacity:0; } }
+  @keyframes screenAdvanceIn { from { transform:translateX(22px) scale(.98); opacity:0; } to { transform:translateX(0) scale(1); opacity:1; } }
+  @keyframes screenAdvanceOutBack { from { transform:translateX(0) scale(1); opacity:1; } to { transform:translateX(22px) scale(.98); opacity:0; } }
+  @keyframes screenAdvanceInBack { from { transform:translateX(-22px) scale(.98); opacity:0; } to { transform:translateX(0) scale(1); opacity:1; } }
+}
+
+/* The Path -- the mobile home screen. Three stones you can tap in any order,
+   connected by a dashed line, so "where am I / what have I done" is a place
+   you can see rather than a state you have to remember. Desktop never shows
+   this: the wide dashboard already shows all three areas side by side. */
+.path-map { display:none; flex-direction:column; gap:20px; }
+@media (max-width:700px) {
+  .path-heading h2 { margin:6px 0 0; font-size:20px; font-weight:500; letter-spacing:-.05em; }
+  .path-track { position:relative; display:grid; gap:2px; padding:6px 4px 10px; }
+  .path-line { position:absolute; left:33px; top:34px; bottom:34px; width:2px;
+    background:repeating-linear-gradient(to bottom,#a88aff70 0 6px,transparent 6px 13px); }
+  .path-stone { position:relative; z-index:1; display:grid; grid-template-columns:66px 1fr; align-items:center;
+    gap:14px; padding:12px 8px; border:none; border-radius:14px; background:none; color:inherit; text-align:left;
+    cursor:pointer; font:inherit; transition:transform .65s cubic-bezier(.34,1.56,.64,1),background .18s ease; }
+  .path-stone:hover,.path-stone:focus-visible { outline:none; background:#ffffff08; }
+  .path-stone:active { transition:transform .1s cubic-bezier(.4,0,.2,1),background .1s ease; transform:scale(.96); background:#ffffff10; }
+  .stone-marker { position:relative; display:grid; place-items:center; width:66px; height:66px; border-radius:50%;
+    border:1px solid #a88aff4a; background:linear-gradient(145deg,#171f45,#0d1430); color:#b9c2e0; font-size:14px;
+    font-weight:700; box-shadow:0 8px 22px #0007; transition:border-color .2s ease,box-shadow .2s ease,color .2s ease,background .2s ease; }
+  .path-stone.visited .stone-marker { border-color:#8ce6c4a0; color:#8ce6c4; }
+  .path-stone.current .stone-marker { border-color:#f4efff; color:#fff; background:linear-gradient(145deg,#503bb0,#2d235d);
+    box-shadow:0 0 0 5px #a98aff26,0 0 30px #8a67ffaa; }
+  .stone-body { min-width:0; }
+  .stone-label { display:block; font-size:16px; font-weight:700; letter-spacing:-.02em; color:#eef4ff; }
+  .stone-caption { display:block; margin-top:3px; color:#9fabc6; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .path-stone.current .stone-caption { color:#c7bfff; }
+}
+
+/* Tactile press: pushing a button or pill compresses it fast (this has to
+   feel instant, or it reads as lag) -- then, letting go, it springs back
+   past its resting size and settles, the way a real button does. The push
+   is quick; the release is where the character lives. */
+button, a, [role="button"] { -webkit-tap-highlight-color:transparent; }
+
+.team-button:active {
+  transition:transform .1s cubic-bezier(.4,0,.2,1),background .1s ease,border-color .1s ease,filter .1s ease;
+  border-color:#aa8bff; background:#1a2450; filter:brightness(1.1);
+  transform:translateY(2px) scale(.93);
+}
+.mini-stone:active {
+  transition:transform .1s cubic-bezier(.4,0,.2,1);
+  transform:scale(.88);
+}
+.mini-stone:active .mini-marker { filter:brightness(1.2); }
+.blank:active {
+  transition:transform .1s cubic-bezier(.4,0,.2,1),background .1s ease;
+  transform:scale(.96);
+}
+.copy-tip:active {
+  transition:transform .1s cubic-bezier(.4,0,.2,1),background .1s ease;
+  transform:scale(.94); background:#16224e;
+}
+.next-action:active {
+  transition:transform .1s cubic-bezier(.4,0,.2,1),background .1s ease;
+  background:#b79eff; transform:translateY(2px) scale(.95);
+}
+@media (max-width:700px) {
+  .back-to-map:active {
+    transition:transform .1s cubic-bezier(.4,0,.2,1),background .1s ease,border-color .1s ease;
+    background:#1a2450; border-color:#aa8bff; transform:scale(.92);
+  }
+  .path-stone:active .stone-marker { filter:brightness(1.15); }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  .team-panel.flash,.loop-panel.flash,.practice-panel.flash { animation:none; }
+  .next-action-result { transition:none; }
+  .team-panel,.loop-panel,.practice-panel { transition:none; }
+  .team-button, .next-action, .cta-button, .back-to-map, .path-stone, .mini-stone, .blank, .copy-tip { transition:background .1s ease,border-color .1s ease,box-shadow .1s ease,color .1s ease; }
+  .screen-exit-genie,.screen-enter-genie,.screen-exit-advance,.screen-enter-advance,.screen-exit-advance-back,.screen-enter-advance-back { animation:none !important; }
+  .back-to-map.pulse .glow-ring, .back-to-map.pulse { animation:none; }
+}
+
+
+.cta-button:active {
+  transition:transform .1s cubic-bezier(.4,0,.2,1),background .1s ease;
+  background:#b79eff; filter:brightness(1.1); transform:translateY(2px) scale(.93);
+}
+
+
+.owner { display:inline-flex; align-items:center; gap:9px; color:#c9d4ee; }
+.owner b { color:#eef4ff; font-weight:700; }
+.owner-sep { width:1px; height:12px; background:#95a9e755; }
+.contact-link { color:#bda3ff; text-decoration:none; border-bottom:1px solid #a98aff66; }
+.boundary { max-width:1440px; margin:26px auto 0; color:#98a3bf; border-top:1px solid #95a9e726;
+  padding-top:15px; position:relative; z-index:1; }
+.closer { position:relative; z-index:1; max-width:1440px; margin:22px auto 0; border:1px solid #a88aff4d;
+  border-radius:20px; background:linear-gradient(135deg,#1b1550,#111a3c 60%,#0d1430);
+  padding:26px clamp(18px,3vw,34px); display:flex; align-items:center; justify-content:space-between;
+  gap:22px; flex-wrap:wrap; }
+.closer h2 { margin:0 0 8px; font-weight:700; letter-spacing:0; }
+.closer p { margin:0; color:#c0cade; max-width:520px; }
+.cta-button { flex:0 0 auto; border:1px solid #9a7fffa0; border-radius:12px; color:#17102f;
+  background:#a98aff; text-decoration:none; padding:14px 22px; font-weight:700;
+  transition:transform .65s cubic-bezier(.34,1.56,.64,1),background .16s ease,filter .16s ease; }
+.loop-center .loop-glyph { color:#9c85ff; }
+.intro { max-width:none; border:1px solid var(--line); border-radius:18px;
+  background:linear-gradient(140deg,#101a3dbf,#0a1029a6); padding:18px clamp(16px,2.4vw,26px);
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:24px; align-items:center; }
+.intro h1 { max-width:none; text-wrap:balance; } @media (min-width:375px) { .intro h1 .nowrap { white-space:nowrap; } }
+.intro-copy { min-width:0; }
+.intro-aside { display:flex; flex-direction:column; align-items:flex-end; gap:6px; text-align:right; }
+.intro-aside .owner { font-size:10px; gap:6px; }
+.intro-aside .owner-sep { height:8px; }
+.intro-aside .cta-button { width:auto; padding:5px 12px; font-size:10px; border-radius:7px; font-weight:700; }
+.closer .cta-button { width:auto; padding:5px 12px; font-size:10px; border-radius:7px; font-weight:700; }
+@media (max-width:1080px) { .intro { grid-template-columns:1fr; gap:16px; }
+  .intro-aside { align-items:flex-start; text-align:left; } }
+@media (max-width:700px) { .closer { padding:20px; } .cta-button { width:100%; text-align:center; } }
+
+/* closer/boundary are the "you're done" wrap-up -- part of the plan screen,
+   not their own step, so they only appear once you're actually on it. */
+@media (max-width:700px) {
+  .app-shell[data-screen] .closer,
+  .app-shell[data-screen] .boundary { display:none; }
+  .app-shell[data-screen="step"][data-focus="plan"] .closer { display:flex; }
+  .app-shell[data-screen="step"][data-focus="plan"] .boundary { display:block; }
+}
+
+
+body, button { font-family:"Nunito",system-ui,sans-serif; letter-spacing:.012em; }
+.intro h1 { font-family:"Nunito",system-ui,sans-serif; font-weight:800; letter-spacing:-.004em; line-height:1.16; }
+.intro { margin-top:22px; } .engine-layout { margin-top:20px; gap:20px; }
+.intro h1 { margin:10px 0 0; font-size:clamp(26px,2.7vw,38px); }
+.intro-copy > p:last-child { max-width:none; margin:12px 0 0; color:#c3cde2; font-size:17px; line-height:1.55; } @media (min-width:900px) { .intro-copy > p:last-child { white-space:nowrap; } }
+
+/* labels: sentence case in the markup, so no uppercase transform and no wide tracking */
+.eyebrow { font-size:14px; font-weight:700; letter-spacing:.01em; line-height:1.4; }
+.stage-tag { font-size:14px; font-weight:700; letter-spacing:.01em; color:#8fe3ff; }
+.masthead > p { font-size:14px; letter-spacing:.01em; }
+
+/* body copy, all of it at or above the 16px floor */
+.panel-heading h2, .panel-head h2, .madlibs-head h2 { font-size:22px; font-weight:700; letter-spacing:0; line-height:1.3; }
+.team-button { font-size:16px; min-height:70px; gap:11px; padding:13px 14px; line-height:1.45; }
+.team-code { font-size:14px; } .button-arrow { font-size:22px; }
+.reference-note { font-size:15px; line-height:1.6; color:#93a0bd; padding-top:20px; }
+.mini-marker { font-size:14px; } .mini-label { font-size:17px; font-weight:700; letter-spacing:0; }
+.stage-readout { padding:17px 19px; } .readout-number { font-size:16px; font-weight:700; }
+.stage-readout p { font-size:17px; line-height:1.55; color:#d3ddf1; }
+.madlibs-sentence { font-size:16px; line-height:1.55; color:#c6d0e6; margin:20px 0 18px; }
+.next-action { font-size:16px; font-weight:700; padding:15px 16px; }
+.next-action span { font-size:22px; font-weight:700; }
+.next-action-result { padding:15px; } .next-action-result .eyebrow { font-size:13px; }
+.next-action-text { font-size:16px; line-height:1.55; margin-top:9px; }
+.blank-detail { font-size:16px; line-height:1.5; }
+.copy-tip { font-size:16px; font-weight:600; }
+.madlibs-hint { font-size:14px; }
+.means-text { font-size:16px; line-height:1.55; }
+.principles p { font-size:16px; line-height:1.55; min-height:0; padding:15px 5px; gap:13px; }
+.principles span { font-size:16px; font-weight:700; }
+.press-hint { font-size:14px; } .boundary { font-size:14px; line-height:1.6; }
+.closer h2 { font-size:23px; } .closer p { font-size:16px; line-height:1.55; }
+.cta-button { font-size:16px; } .owner { font-size:15px; } .contact-link { font-size:15px; }
+.loop-panel { min-height:0; }
+
+@media (max-width:700px) {
+  .reference-note { font-size:16px; } .boundary { font-size:16px; }
+}
+.reference-note { font-size:16px; }
+.boundary { font-size:16px; }
+
+/* the made-up-examples disclaimer was display:none on phones. It is the page's
+   honesty line, so it stays visible on the device most people will use. */
+@media (max-width:700px) {
+  .reference-note { display:block; margin-top:16px; padding-top:16px; border-top:1px solid #95a9e726; }
+  .team-list { grid-template-columns:1fr; }
+  .team-button { min-height:0; grid-template-columns:30px minmax(0,1fr) auto; }
+  .button-arrow { display:inline; }
+  .intro h1 { font-size:25px; } .intro-copy > p:last-child { font-size:16px; }
+}
+
+</style>
+</head>
+<body>
+<main class="app-shell" data-focus="choose" data-screen="path">
+  <a class="skip-link" href="#practice">Skip to the practice loop</a>
+  <div class="viewport-frame">
+  <header class="masthead">
+    <div class="brand-lockup" aria-label="AI Adoption Engine">
+      <span class="brand-mark" aria-hidden="true"></span><span>AI Adoption Engine</span>
+    </div>
+    <p>Reference model</p>
+  </header>
+
+  <nav class="quick-nav" aria-label="Navigation">
+<span class="quick-nav-label">Pick a step below</span>
+    <button type="button" class="back-to-map" id="back-to-map" aria-label="Back to the path"><span class="glow-ring" aria-hidden="true"></span><span aria-hidden="true">&larr;</span> Map</button>
+  </nav>
+
+  <section class="intro" aria-labelledby="page-title">
+    <div class="intro-copy">
+      <p class="eyebrow">The easy way to start</p>
+      <h1 id="page-title"><span class="nowrap">Pick one small job.</span> <span class="nowrap">Try an AI helper.</span> <span class="nowrap">Keep a person in charge.</span></h1>
+      <p>This guide helps a team use AI without confusion. You do not need to be an expert to start.</p>
+    </div>
+    <div class="intro-aside">
+      <span class="owner"><b>Simon Mukooza</b><span class="owner-sep"></span><span>AI Operations</span></span>
+      <a class="cta-button" href="mailto:mukoozasimon@gmail.com?subject=AI%20Adoption%20Engine">Email Simon</a>
+    </div>
+  </section>
+
+  <section class="path-map" aria-label="Your path">
+    <div class="path-heading">
+      <p class="eyebrow">Your path</p>
+      <h2>Pick where to go</h2>
+    </div>
+    <div class="path-track">
+      <span class="path-line" aria-hidden="true"></span>
+      <button type="button" class="path-stone current" data-stone="choose">
+        <span class="stone-marker">01</span>
+        <span class="stone-body">
+          <span class="stone-label">Choose</span>
+          <span class="stone-caption" id="stone-caption-choose">Tap to start</span>
+        </span>
+      </button>
+      <button type="button" class="path-stone" data-stone="loop">
+        <span class="stone-marker">02</span>
+        <span class="stone-body">
+          <span class="stone-label">Practice</span>
+          <span class="stone-caption" id="stone-caption-loop">Not started yet</span>
+        </span>
+      </button>
+      <button type="button" class="path-stone" data-stone="plan">
+        <span class="stone-marker">03</span>
+        <span class="stone-body">
+          <span class="stone-label">Plan</span>
+          <span class="stone-caption" id="stone-caption-plan">Not started yet</span>
+        </span>
+      </button>
+    </div>
+  </section>
+
+  <section class="engine-layout" id="practice" data-focus="choose" aria-label="AI adoption practice workspace">
+    <aside class="team-panel" id="step-choose" aria-label="Choose who needs help">
+      <div class="panel-heading"><p class="eyebrow">1. Start here</p><h2>Who needs help?</h2></div>
+      <div class="team-list">
+<button class="team-button selected" type="button" data-team="Helping new starters" aria-pressed="true"><span class="team-code">01</span><span>Helping new starters</span><span class="button-arrow" aria-hidden="true">&rsaquo;</span></button>
+<button class="team-button" type="button" data-team="Keeping work moving" aria-pressed="false"><span class="team-code">02</span><span>Keeping work moving</span><span class="button-arrow" aria-hidden="true">&rsaquo;</span></button>
+<button class="team-button" type="button" data-team="Helping customers" aria-pressed="false"><span class="team-code">03</span><span>Helping customers</span><span class="button-arrow" aria-hidden="true">&rsaquo;</span></button>
+      </div>
+      <p class="press-hint team-hint" id="team-press-hint"><svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.7"/><circle cx="8" cy="8" r="2.6" fill="currentColor"/></svg><span>Pick one. It shapes your plan below.</span></p>
+      <p class="reference-note">These examples are made up. No real customer or employee information is shown.</p>
+    </aside>
+
+    <section class="loop-panel" id="step-loop" aria-labelledby="loop-title">
+      <div class="panel-head">
+        <p class="eyebrow">2. <span id="stage-eyebrow">Do one tiny test</span> - <span id="audience-suffix">to help new starters</span></p>
+        <h2 id="loop-title">Four steps, one path</h2>
+      </div>
+      <p class="press-hint loop-hint" id="loop-press-hint"><svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.7"/><circle cx="8" cy="8" r="2.6" fill="currentColor"/></svg><span>Press any step to change the plan</span></p>
+      <div class="mini-path" aria-label="Practice loop stages">
+        <span class="mini-line" aria-hidden="true"></span>
+        <div class="mini-row">
+<button class="mini-stone current" type="button" data-stage="Try it" aria-pressed="true"><span class="mini-marker">01</span><span class="mini-label">Try it</span></button>
+<button class="mini-stone" type="button" data-stage="Check it" aria-pressed="false"><span class="mini-marker">02</span><span class="mini-label">Check it</span></button>
+<button class="mini-stone" type="button" data-stage="Share it" aria-pressed="false"><span class="mini-marker">03</span><span class="mini-label">Share it</span></button>
+<button class="mini-stone" type="button" data-stage="Improve it" aria-pressed="false"><span class="mini-marker">04</span><span class="mini-label">Improve it</span></button>
+        </div>
+      </div>
+      <div class="stage-readout" aria-live="polite">
+        <span class="readout-number" id="readout-number">01</span>
+        <p id="stage-guidance">Ask an AI helper to do one small job with a safe example.</p>
+      </div>
+    </section>
+
+    <aside class="practice-panel" id="step-plan" aria-label="Your plan">
+      <div class="madlibs-head">
+        <p class="eyebrow">3. Your plan</p>
+        <h2 id="practice-title">Help a new starter</h2>
+        <span class="stage-tag" id="plan-stage-tag">Try it stage</span>
+      </div>
+      <div class="madlibs-card">
+        <p class="madlibs-sentence">
+          Try this: <span class="blank b-practice" id="blank-practice" data-blank="practice" role="button" tabindex="0">turning approved welcome notes into one simple first-week guide</span>.
+          Make sure <span class="blank b-checkpoint" id="blank-checkpoint" data-blank="checkpoint" role="button" tabindex="0">a manager checks that the guide is kind, clear, and correct</span>.
+          Right now, <span class="blank b-review" id="blank-review" data-blank="review" role="button" tabindex="0">pick one small job -- don't try to change everything at once</span>
+        </p>
+        <div class="blank-detail" id="blank-detail"></div>
+        <p class="madlibs-hint">Tap a highlighted word to see where it came from.</p>
+      </div>
+      <button class="next-action" id="next-action" type="button" aria-expanded="false" aria-controls="next-action-result">
+        <span id="next-action-label">Tell me my next move</span>
+        <span aria-hidden="true" id="next-action-sign">+</span>
+      </button>
+      <div class="next-action-result" id="next-action-result" aria-live="polite" aria-hidden="true">
+        <p class="eyebrow">Start with this</p>
+        <p class="next-action-text" id="next-action-text">Try it once: turning approved welcome notes into one simple first-week guide. Then make sure a manager checks that the guide is kind, clear, and correct, and write down what you learned.</p>
+        <button type="button" class="copy-tip" id="copy-tip">
+          <svg class="copy-tip-icon" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.6" stroke="currentColor" stroke-width="1.3"/><path d="M3.5 10.2V3.6C3.5 2.7 4.2 2 5.1 2h6.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span id="copy-tip-label">Copy this tip</span>
+        </button>
+        <div class="means-block">
+          <p class="eyebrow means-eyebrow">What this means</p>
+          <p class="means-text" id="means-text">Start with just this one job -- turning approved welcome notes into one simple first-week guide -- instead of trying to change everything at once. A single small win is easier to trust, and easier to check, than a big rollout.</p>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="principles" aria-label="System principles">
+    <p><span>01</span> Pick one real problem.</p>
+    <p><span>02</span> Let a person make the final call.</p>
+    <p><span>03</span> Learn before you add more.</p>
+  </section>
+
+  <section class="closer" aria-label="Get in touch">
+    <div><h2>Want this running for your team?</h2><p>A real setup maps your tools, your owners and one first workflow.</p></div>
+    <a class="cta-button" href="mailto:mukoozasimon@gmail.com?subject=AI%20Adoption%20Engine">Email Simon</a>
+  </section>
+  <p class="boundary">This is a public reference model. Every example on it is invented. It stores no data, connects to no live system, and administers no accounts. Built by Simon Mukooza, AI Operations.</p>
+  </div>
+</main>
+<script>
+(function () {
+  var DATA = {"teamProfiles": {"Helping new starters": {"code": "01", "title": "Help a new starter", "practice": "turning approved welcome notes into one simple first-week guide", "checkpoint": "a manager checks that the guide is kind, clear, and correct", "audienceSuffix": "to help new starters"}, "Keeping work moving": {"code": "02", "title": "Keep the day moving", "practice": "turning an approved work log into a short, clear update", "checkpoint": "the outgoing lead checks every task and owner", "audienceSuffix": "to keep moving"}, "Helping customers": {"code": "03", "title": "Help a customer well", "practice": "turning approved account notes into a clear customer handoff", "checkpoint": "the account owner checks the tone, facts, and next step", "audienceSuffix": "to help a customer"}}, "stageProfiles": {"Try it": {"eyebrow": "Do one tiny test", "guidance": "Ask an AI helper to do one small job with a safe example.", "review": "pick one small job -- don't try to change everything at once"}, "Check it": {"eyebrow": "Check it together", "guidance": "Ask a person to make sure the answer is helpful and makes sense.", "review": "check the facts, the tone, and what should happen next"}, "Share it": {"eyebrow": "Tell the team", "guidance": "Write down what helped, so another person can try it too.", "review": "share the helpful prompt, the safe boundary, and the person who checks it"}, "Improve it": {"eyebrow": "Make it better", "guidance": "Keep the useful parts. Change or stop the parts that create trouble.", "review": "listen for what feels hard before adding another tool"}}, "stages": ["Try it", "Check it", "Share it", "Improve it"]};
+  var teamButtons = [].slice.call(document.querySelectorAll(".team-button"));
+  var miniStones = [].slice.call(document.querySelectorAll(".mini-stone"));
+  var pathStones = [].slice.call(document.querySelectorAll(".path-stone"));
+  var pathMap = document.querySelector(".path-map");
+  var engineLayout = document.getElementById("practice");
+  var appShell = document.querySelector(".app-shell");
+  // The whole screen, header included -- the one element the genie motion
+  // actually animates. See setGenieOrigin/playExit below.
+  var shell = document.querySelector(".viewport-frame");
+  var quickNav = document.querySelector(".quick-nav");
+  var teamHint = document.getElementById("team-press-hint");
+  var backToMap = document.getElementById("back-to-map");
+  var mobile = window.matchMedia("(max-width: 700px)");
+  var currentTeam = "Helping new starters";
+  var currentStage = "Try it";
+  var currentFocus = "choose";
+  var visited = { choose: false, loop: false, plan: false };
+
+  // The mad-lib's last clause (the stage's "review" phrase) is shorthand --
+  // a compact checklist item, not something self-explanatory the first time
+  // you land on this stage. This unpacks it in plain language, tied back to
+  // this team's practice where that helps ground it.
+  var PLAIN_REVIEW = {
+    "Try it": function (p) {
+      return "Start with just this one job -- " + p.practice + " -- instead of trying to change everything at once. " +
+        "A single small win is easier to trust, and easier to check, than a big rollout.";
+    },
+    "Check it": function () {
+      return "Before anything goes out, a real person checks three things: that the facts are actually correct, " +
+        "that it sounds like something your team would say, and that it's clear what happens next. " +
+        "That's what makes it safe to trust.";
+    },
+    "Share it": function () {
+      return "Write down three things so the next person doesn't start from scratch: the exact prompt that worked, " +
+        "what this should never be used for, and who checks the output before it goes out.";
+    },
+    "Improve it": function () {
+      return "Listen for what feels hard means paying attention to the friction people actually report -- where the " +
+        "process feels slow, confusing, or annoying, where they hesitate to use it, where they quietly go back to " +
+        "doing it the old way. That's the diagnostic step. A new AI tool isn't the default fix until you know what's " +
+        "actually causing that friction.";
+    }
+  };
+  var panelEls = {
+    path: pathMap,
+    choose: document.getElementById("step-choose"),
+    loop: document.getElementById("step-loop"),
+    plan: document.getElementById("step-plan")
+  };
+
+  function flash(step) {
+    var panel = panelEls[step];
+    if (!panel) return;
+    panel.classList.remove("flash");
+    void panel.getBoundingClientRect();
+    panel.classList.add("flash");
+  }
+
+  function refreshStoneCaptions() {
+    var elChoose = document.getElementById("stone-caption-choose");
+    var elLoop = document.getElementById("stone-caption-loop");
+    var elPlan = document.getElementById("stone-caption-plan");
+    if (elChoose) elChoose.textContent = visited.choose ? currentTeam : "Tap to start";
+    if (elLoop) elLoop.textContent = visited.loop ? currentStage : "Not started yet";
+    if (elPlan) elPlan.textContent = visited.plan ? DATA.teamProfiles[currentTeam].title : "Not started yet";
+  }
+
+  function refreshStoneStates() {
+    pathStones.forEach(function (b) {
+      var step = b.getAttribute("data-stone");
+      b.classList.toggle("visited", !!visited[step]);
+      b.classList.toggle("current", step === currentFocus);
+    });
+  }
+
+  // Only one panel is ever "live." Moving focus flashes the panel that just
+  // became relevant on desktop (the dashboard shows all three at once, so
+  // the tap that caused this needs a visible answer); on a phone the screen
+  // transition itself already is that answer, so flash stays out of its way
+  // there. Either way the map's stones stay in sync with what's current.
+  function setFocus(step) {
+    currentFocus = step;
+    if (engineLayout) engineLayout.setAttribute("data-focus", step);
+    if (appShell) appShell.setAttribute("data-focus", step);
+    if (!mobile.matches) flash(step);
+    refreshStoneStates();
+    if (mobile.matches) window.scrollTo(0, 0);
+  }
+
+  function setScreen(step) {
+    if (appShell) appShell.setAttribute("data-screen", step);
+  }
+
+  // Two different motions, used for two different things: "genie" is
+  // reserved for the moves that actually touch the map (leaving it, coming
+  // back to it) -- that's the only time collapsing toward the pill is
+  // telling the truth about where you're headed. "advance" is a plain
+  // forward slide for a step-to-step move that never goes near the map, so
+  // it must not look like one.
+  // The genie's collapse/expand always has to converge on the exact spot
+  // the Map pill lives, not a guessed pixel -- so measure the real nav bar
+  // (same fixed box on every screen; only its label vs. pill content
+  // differs) relative to the shell each time, right before the shell
+  // starts moving.
+  function setGenieOrigin() {
+    if (!shell || !quickNav) return;
+    var shellRect = shell.getBoundingClientRect();
+    var navRect = quickNav.getBoundingClientRect();
+    var x = navRect.left - shellRect.left + 38;
+    var y = navRect.top - shellRect.top + navRect.height / 2;
+    shell.style.transformOrigin = x + "px " + y + "px";
+  }
+
+  function playExit(key, kind) {
+    if (kind === "genie") {
+      // Genie is a whole-screen motion: the map, the header above it, even
+      // the byline card, all get sucked toward the Map pill together --
+      // not just the one panel underneath. "advance" never touches this;
+      // it stays a plain per-panel slide, exactly as before.
+      if (!shell) return;
+      setGenieOrigin();
+      shell.classList.remove("screen-exit-genie");
+      void shell.getBoundingClientRect();
+      shell.classList.add("screen-exit-genie");
+      return;
+    }
+    var el = panelEls[key];
+    if (!el) return;
+    el.classList.remove("screen-exit-advance", "screen-exit-advance-back");
+    void el.getBoundingClientRect();
+    el.classList.add(kind === "advance-back" ? "screen-exit-advance-back" : "screen-exit-advance");
+  }
+
+  var pulseMapTimer = null;
+  function pulseMap() {
+    // Fires every time the Map pill appears (leaving the map for a step,
+    // or coming back to one) -- not just the first time. Cancel any
+    // still-pending cleanup from a previous flash before restarting: back
+    // and forth quickly enough and that old timeout would otherwise land
+    // after this fresh "add", cutting the new flash short.
+    if (!backToMap) return;
+    if (pulseMapTimer) clearTimeout(pulseMapTimer);
+    backToMap.classList.remove("pulse");
+    // force a reflow so the animation restarts even if it never finished
+    // decaying from the last time (e.g. rapid back-and-forth navigation)
+    void backToMap.getBoundingClientRect();
+    backToMap.classList.add("pulse");
+    pulseMapTimer = setTimeout(function () { backToMap.classList.remove("pulse"); }, 950);
+  }
+
+  var exitTimer = null, enterTimer = null;
+  function goTo(nextScreen, nextFocus, kind, applyState) {
+    if (!mobile.matches) {
+      if (applyState) applyState();
+      setScreen(nextScreen);
+      if (nextFocus) setFocus(nextFocus);
+      return;
+    }
+    var outgoingKey = appShell.getAttribute("data-screen") === "path" ? "path" : currentFocus;
+    playExit(outgoingKey, kind);
+    if (exitTimer) clearTimeout(exitTimer);
+    if (enterTimer) clearTimeout(enterTimer);
+    var outMs = kind === "genie" ? 900 : 300;
+    var inMs = kind === "genie" ? 1100 : 400;
+    exitTimer = setTimeout(function () {
+      if (applyState) applyState();
+      setScreen(nextScreen);
+      if (nextFocus) setFocus(nextFocus);
+      // "genie" now enters on the shell (the whole screen); "advance" still
+      // enters on just the one incoming panel, exactly as before.
+      if (kind === "genie") {
+        if (shell) {
+          shell.classList.remove("screen-exit-genie", "screen-enter-genie");
+          void shell.getBoundingClientRect();
+          shell.classList.add("screen-enter-genie");
+          enterTimer = setTimeout(function () {
+            shell.classList.remove("screen-enter-genie");
+          }, inMs);
+        }
+      } else {
+        // Same story as the genie exit class above, just for the per-panel
+        // slide: "screen-exit-advance"/"screen-exit-advance-back" are also
+        // frozen (forwards) at a sideways, faded-out end state, and this
+        // panel gets display:none'd right after via the data-focus CSS
+        // rule -- so the class is still sitting there, un-removed, the
+        // next time this same panel is redisplayed. A CSS animation
+        // restarts from its own 0% the instant its element is
+        // re-displayed, class or no class change (the same quirk fixed
+        // for the Map pill's flash), and this time the "spotlight" rule's
+        // opacity:1 !important keeps the panel looking visible while its
+        // transform is left frozen at the old exit's sideways offset --
+        // which is exactly the panel settling visibly left- or
+        // right-of-center instead of centered. Dropping the class the
+        // moment its own exit animation has finished (now) means there is
+        // nothing left to replay next time.
+        var outgoingEl = panelEls[outgoingKey];
+        if (outgoingEl) outgoingEl.classList.remove("screen-exit-advance", "screen-exit-advance-back");
+        var incomingKey = nextFocus || "path";
+        var el = panelEls[incomingKey];
+        if (el) {
+          var enterClass = kind === "advance-back" ? "screen-enter-advance-back" : "screen-enter-advance";
+          el.classList.remove("screen-enter-advance", "screen-enter-advance-back");
+          void el.getBoundingClientRect();
+          el.classList.add(enterClass);
+          enterTimer = setTimeout(function () {
+            el.classList.remove(enterClass);
+          }, inMs);
+        }
+      }
+      if (kind === "genie" && nextScreen === "step") pulseMap();
+    }, outMs);
+  }
+
+  function enterStep(step) {
+    var fromPath = appShell.getAttribute("data-screen") === "path";
+    goTo("step", step, fromPath ? "genie" : "advance", function () {
+      if (!visited[step]) { visited[step] = true; refreshStoneCaptions(); }
+    });
+  }
+
+  function goToPath() {
+    goTo("path", null, "genie");
+  }
+
+  // The "Map" pill was, until now, the only way back from a step screen --
+  // which meant changing an earlier pick meant losing your place entirely.
+  // A swipe steps back exactly one level instead: plan -> loop -> choose,
+  // preserving every pick you already made (team/stage state is untouched;
+  // only which panel is showing moves), and only unwinds all the way to the
+  // map once there is nowhere shallower left to go.
+  function goBack() {
+    if (currentFocus === "plan") {
+      goTo("step", "loop", "advance-back");
+    } else if (currentFocus === "loop") {
+      goTo("step", "choose", "advance-back");
+    } else {
+      goToPath();
+    }
+  }
+
+  // A rightward swipe (the standard mobile back gesture -- like dragging in
+  // from the left edge) anywhere over the current step panel steps back one level
+  // (see goBack). Direction and distance are only judged once the finger
+  // lifts, and a mostly-vertical drag is ignored, so this never competes
+  // with scrolling or with an ordinary tap on a button underneath it --
+  // both keep working exactly as before.
+  (function () {
+    if (!engineLayout) return;
+    var SWIPE_MIN_X = 60;
+    var SWIPE_MAX_Y = 45;
+    var startX = 0, startY = 0, tracking = false;
+    engineLayout.addEventListener("touchstart", function (e) {
+      if (e.touches.length !== 1) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    }, { passive: true });
+    engineLayout.addEventListener("touchend", function (e) {
+      if (!tracking) return;
+      tracking = false;
+      if (!mobile.matches || appShell.getAttribute("data-screen") !== "step") return;
+      var touch = e.changedTouches[0];
+      if (!touch) return;
+      var dx = touch.clientX - startX;
+      var dy = touch.clientY - startY;
+      if (dx >= SWIPE_MIN_X && Math.abs(dy) < SWIPE_MAX_Y) {
+        goBack();
+      }
+    }, { passive: true });
+  }());
+
+  // A fresh team or stage means a fresh plan -- close out anything left
+  // open from the last one instead of showing a stale reveal against new
+  // copy.
+  function resetPlanReveal() {
+    var t = document.getElementById("next-action"), r = document.getElementById("next-action-result"),
+        l = document.getElementById("next-action-label"), s = document.getElementById("next-action-sign");
+    if (t) t.setAttribute("aria-expanded", "false");
+    if (r) { r.classList.remove("open"); r.style.maxHeight = "0px"; r.setAttribute("aria-hidden", "true"); }
+    if (l) l.textContent = "Tell me my next move";
+    if (s) s.textContent = "+";
+    openBlank = null;
+    document.querySelectorAll(".blank").forEach(function (o) { o.classList.remove("open"); });
+    var bd = document.getElementById("blank-detail");
+    if (bd) { bd.className = "blank-detail"; bd.innerHTML = ""; }
+    resetCopyTip();
+  }
+
+  function renderPlanText() {
+    var p = DATA.teamProfiles[currentTeam], s = DATA.stageProfiles[currentStage];
+    document.getElementById("practice-title").textContent = p.title;
+    document.getElementById("plan-stage-tag").textContent = currentStage + " stage";
+    document.getElementById("blank-practice").textContent = p.practice;
+    document.getElementById("blank-checkpoint").textContent = p.checkpoint;
+    document.getElementById("blank-review").textContent = s.review;
+    // the next-move reveal is built from this exact plan, not a canned line
+    // -- change the team or the stage and this text changes too.
+    document.getElementById("next-action-text").textContent =
+      "Try it once: " + p.practice + ". Then make sure " + p.checkpoint + ", and write down what you learned.";
+    // the plain-language readout of the whole mad-lib sentence, not just
+    // the "review" blank in isolation.
+    document.getElementById("means-text").textContent = PLAIN_REVIEW[currentStage](p);
+  }
+
+  function selectTeam(n) {
+    // Re-tapping the current choice still has to advance to the next step --
+    // "Helping new starters" is the default team, so on a first visit it is
+    // already the selected card, and a tap on it must open the practice loop
+    // just like tapping any other card does. Only the state refresh below is
+    // skipped when nothing actually changed.
+    if (n !== currentTeam) {
+      var p = DATA.teamProfiles[n]; if (!p) return;
+      currentTeam = n;
+      teamButtons.forEach(function (b) { var on = b.getAttribute("data-team") === n;
+        b.classList.toggle("selected", on); b.setAttribute("aria-pressed", on ? "true" : "false"); });
+      var suffixEl = document.getElementById("audience-suffix");
+      if (suffixEl) suffixEl.textContent = p.audienceSuffix;
+      if (teamHint) teamHint.classList.add("used");
+      refreshStoneCaptions();
+      resetPlanReveal();
+      renderPlanText();
+    }
+    enterStep("loop");
+  }
+  function selectStage(n) {
+    // Same story as selectTeam above: "Try it" is the default stage, so
+    // tapping it while it's already selected must still move to the plan
+    // step instead of silently doing nothing.
+    if (n !== currentStage) {
+      var p = DATA.stageProfiles[n]; if (!p) return;
+      currentStage = n;
+      miniStones.forEach(function (b) { var on = b.getAttribute("data-stage") === n;
+        b.classList.toggle("current", on); b.setAttribute("aria-pressed", on ? "true" : "false"); });
+      document.getElementById("stage-eyebrow").textContent = p.eyebrow;
+      document.getElementById("stage-guidance").textContent = p.guidance;
+      var i = DATA.stages.indexOf(n) + 1;
+      document.getElementById("readout-number").textContent = String(i).length < 2 ? "0" + i : String(i);
+      refreshStoneCaptions();
+      resetPlanReveal();
+      renderPlanText();
+    }
+    enterStep("plan");
+  }
+  teamButtons.forEach(function (b) { b.addEventListener("click", function () { selectTeam(b.getAttribute("data-team")); }); });
+  miniStones.forEach(function (b) { b.addEventListener("click", function () { selectStage(b.getAttribute("data-stage")); }); });
+  pathStones.forEach(function (b) { b.addEventListener("click", function () { enterStep(b.getAttribute("data-stone")); }); });
+  if (backToMap) backToMap.addEventListener("click", goToPath);
+  refreshStoneStates();
+
+  var t = document.getElementById("next-action"), r = document.getElementById("next-action-result"),
+      l = document.getElementById("next-action-label"), s = document.getElementById("next-action-sign");
+  t.addEventListener("click", function () {
+    var next = t.getAttribute("aria-expanded") !== "true";
+    t.setAttribute("aria-expanded", next ? "true" : "false");
+    r.classList.toggle("open", next);
+    r.style.maxHeight = next ? (r.scrollHeight + "px") : "0px";
+    r.setAttribute("aria-hidden", next ? "false" : "true");
+    l.textContent = next ? "Hide my next move" : "Tell me my next move";
+    s.textContent = next ? "-" : "+";
+    if (!next) resetCopyTip(); // closing the panel -- next open should read "Copy this tip" again
+  });
+
+  // Tapping a highlighted word in the plan sentence has to actually do
+  // something: it opens a one-line answer to "why does it say that" --
+  // which earlier pick this fact came from -- right under the sentence.
+  var BLANK_SOURCE = {
+    practice: function () { return "<strong>" + currentTeam + "</strong> -- this is the job tied to that pick."; },
+    checkpoint: function () { return "<strong>" + currentTeam + "</strong> -- this is who checks that job."; },
+    review: function () { return "<strong>" + currentStage + "</strong> -- this is what that step in the loop asks for."; }
+  };
+  var openBlank = null;
+  var blankDetail = document.getElementById("blank-detail");
+  document.querySelectorAll(".blank").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var key = b.getAttribute("data-blank");
+      document.querySelectorAll(".blank").forEach(function (o) { o.classList.remove("open"); });
+      if (openBlank === key) {
+        openBlank = null;
+        blankDetail.classList.remove("open");
+        return;
+      }
+      openBlank = key;
+      b.classList.add("open");
+      blankDetail.className = "blank-detail open b-" + key;
+      blankDetail.innerHTML = BLANK_SOURCE[key]();
+    });
+    b.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); b.click(); }
+    });
+  });
+
+  // The reveal isn't just something to read -- it's meant to leave the app,
+  // so tapping the copy prompt puts the actual tip text on the clipboard,
+  // with a real fallback for a context where the Clipboard API is blocked,
+  // and the button itself confirms it worked instead of trusting it
+  // silently. Three real tiers, each tried on FAILURE (not just when the
+  // one above is missing): navigator.clipboard.writeText can exist as a
+  // function and still have its call rejected by a sandboxed frame's
+  // clipboard permission, so every tier has to be reachable even then.
+  var copyResetTimer = null;
+  function resetCopyTip() {
+    clearTimeout(copyResetTimer);
+    var btn = document.getElementById("copy-tip");
+    if (!btn) return;
+    btn.classList.remove("copied");
+    document.getElementById("copy-tip-label").textContent = "Copy this tip";
+  }
+  function legacyExecCopy(text) {
+    return new Promise(function (resolve, reject) {
+      var area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.top = "0";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      area.setSelectionRange(0, text.length);
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
+      document.body.removeChild(area);
+      if (ok) { resolve(); } else { reject(new Error("execCommand copy failed")); }
+    });
+  }
+  function selectAndCopy(el) {
+    return new Promise(function (resolve, reject) {
+      if (!el) { reject(new Error("no element to select")); return; }
+      try {
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        var ok = document.execCommand("copy");
+        if (ok) { resolve(); } else { reject(new Error("selection copy failed")); }
+      } catch (err) { reject(err); }
+    });
+  }
+  function copyTipText(text) {
+    var modern = (navigator.clipboard && navigator.clipboard.writeText)
+      ? navigator.clipboard.writeText(text)
+      : Promise.reject(new Error("Clipboard API unavailable"));
+    return modern
+      .catch(function () { return legacyExecCopy(text); })
+      .catch(function () { return selectAndCopy(document.getElementById("next-action-text")); });
+  }
+  var copyBtn = document.getElementById("copy-tip");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      var text = document.getElementById("next-action-text").textContent;
+      var label = document.getElementById("copy-tip-label");
+      copyTipText(text).then(function () {
+        clearTimeout(copyResetTimer);
+        copyBtn.classList.add("copied");
+        label.textContent = "Copied";
+        copyResetTimer = setTimeout(resetCopyTip, 1800);
+      }).catch(function () {
+        // every programmatic method failed -- selectAndCopy still leaves
+        // the sentence highlighted on-screen as a side effect of trying,
+        // so this isn't asking the reader to go select something
+        // themselves, it's telling them it's already selected.
+        label.textContent = "Selected above -- press Ctrl/Cmd+C";
+        copyResetTimer = setTimeout(resetCopyTip, 2600);
+      });
+    });
+  }
+}());
+
+</script>
+</body>
+</html>

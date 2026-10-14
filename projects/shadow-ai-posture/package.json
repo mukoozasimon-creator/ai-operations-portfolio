@@ -1,0 +1,11 @@
+{
+  "name": "shadow-ai-posture-framework",
+  "version": "2.6.5",
+  "private": true,
+  "scripts": {
+    "test": "node tests/run-all.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.0"
+  }
+}

@@ -1,0 +1,83 @@
+/* Chosen dogwood experience. Photo is decorative; the four controls remain real buttons. */
+.app { min-height: 100svh; }
+.compass-content { grid-template-columns: minmax(360px, 530px) minmax(0, 480px); gap: 36px; }
+.compass-content.is-unselected { grid-template-columns: minmax(0, 550px); }
+.compass-wheel.flower {
+  display: block; width: min(100%, 530px); height: auto; aspect-ratio: 1308 / 1202;
+  padding: 0; isolation: isolate;
+}
+.compass-wheel.flower::before { content: none; }
+.dogwood-art { display: block; width: 100%; height: auto; overflow: visible; user-select: none; pointer-events: none; }
+/* The chosen petal stays larger, including after the pointer leaves. */
+.petal-art { transform-box: view-box; transform-origin: 49.5% 50.75%; transform: scale(1); filter: brightness(1); transition: transform 220ms ease-out, filter 220ms ease-out; }
+.petal-art.people { --petal-glow: #16cbb34d; }
+.petal-art.connections { --petal-glow: #507cff4d; }
+.petal-art.progress { --petal-glow: #ff9b354d; }
+.petal-art.care { --petal-glow: #b875f94d; }
+/* Hover previews a choice; the larger selected state takes precedence below. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .flower:has(.petal.people:hover) .petal-art.people,
+  .flower:has(.petal.connections:hover) .petal-art.connections,
+  .flower:has(.petal.progress:hover) .petal-art.progress,
+  .flower:has(.petal.care:hover) .petal-art.care { transform: scale(1.035); }
+}
+.flower:has(.petal[aria-pressed="true"]) .petal-art { filter: brightness(.78); }
+.flower:has(.petal.people[aria-pressed="true"]) .petal-art.people,
+.flower:has(.petal.connections[aria-pressed="true"]) .petal-art.connections,
+.flower:has(.petal.progress[aria-pressed="true"]) .petal-art.progress,
+.flower:has(.petal.care[aria-pressed="true"]) .petal-art.care { transform: scale(1.07); filter: brightness(1.14) saturate(1.12) drop-shadow(0 0 5px var(--petal-glow)); }
+/* Allow the selection to ease in when the detail view is first rendered. */
+@starting-style {
+  .flower:has(.petal[aria-pressed="true"]) .petal-art { transform: scale(1); filter: brightness(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .petal-art { transition: none; }
+}
+.flower .select-context.petal {
+  position: absolute; display: grid; place-items: center; margin: 0; padding: 0;
+  border: 0; border-radius: 0; background: none; box-shadow: none; color: #f7f2ee;
+}
+.flower .petal.people { top: 3%; left: 5%; width: 45%; height: 49%; clip-path: polygon(35% 0,75% 12%,100% 47%,100% 88%,68% 100%,17% 99%,0 70%,0 35%,15% 14%,24% 30%); }
+.flower .petal.connections { top: 8%; right: 1%; width: 48%; height: 40%; clip-path: polygon(20% 13%,79% 0,99% 24%,89% 59%,59% 93%,0 100%,0 66%,5% 32%); }
+.flower .petal.progress { bottom: 3%; left: 8%; width: 41%; height: 42%; clip-path: polygon(47% 3%,100% 0,96% 57%,67% 100%,29% 100%,15% 79%,0 71%,8% 34%); }
+.flower .petal.care { bottom: 1%; right: 1%; width: 49%; height: 49%; clip-path: polygon(0 6%,48% 0,83% 15%,100% 53%,96% 88%,70% 100%,28% 100%,0 66%); }
+/* Lettering is part of the botanical asset; these controls supply interaction only. */
+.flower .petal[aria-pressed="true"], .flower .petal:hover { background: none; box-shadow: none; }
+.flower .petal:focus-visible { outline: none; }
+.flower .flower-reset {
+  position: absolute; z-index: 2; left: 38%; top: 37.5%; width: 23%; height: 26%;
+  min-width: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 45%;
+  background: transparent; cursor: pointer;
+}
+.flower .flower-reset:focus-visible { outline: 2px dashed #fff8e9; outline-offset: 3px; }
+/* Keyboard-only underline, never a pointer-hover ring. */
+.flower .petal:focus-visible::after {
+  content: ""; position: absolute; inset: 30% 22% 32%;
+  border-bottom: 3px solid #fff8e9; filter: drop-shadow(0 2px 1px #211e23);
+  pointer-events: none;
+}
+.compass-app .wheel-note { font-size: 12px; margin-top: 14px; }
+.footer { flex-wrap: wrap; align-items: center; }
+.footer #notes { font-size: 12px; text-decoration: underline; text-underline-offset: 4px; padding: 8px; }
+.workspace-mode { height: 100svh; display: flex; flex-direction: column; }
+.workspace-bar { flex-shrink: 0; }
+.workspace-frame { height: auto; flex: 1; min-height: 0; }
+@media (max-width: 1000px) {
+  .compass-content { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .compass-content > div:first-child { width: min(100%, 530px); }
+  .compass-content #reveal { width: min(100%, 520px); }
+}
+@media (max-width: 750px) {
+  .compass-content { gap: 24px; }
+  .compass-wheel.flower { width: min(100%, 420px); }
+  .footer { gap: 8px 16px; }
+  .footer span:last-child { width: 100%; text-align: left; }
+}
+
+.text-navigation{font-size:13px;color:var(--cream);margin:12px auto 0;text-align:center}
+.text-navigation summary{cursor:pointer;padding:10px;min-height:44px;text-decoration:underline;text-underline-offset:4px}
+.text-navigation>div{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.text-navigation button,.restart-confirm button{min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:8px}
+.text-navigation button[aria-pressed=true]{border-color:var(--cream)}
+summary:focus-visible{outline:2px solid var(--cream);outline-offset:3px}
+.restart-confirm{border:1px solid var(--line);padding:12px;border-radius:8px;margin-bottom:12px}

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virgo Cargo - Instant Freight Quote</title>
+<style>
+  :root {
+    --navy: #0e1d34;
+    --navy-2: #15294a;
+    --card: #ffffff;
+    --bg: #f4f6fa;
+    --gold: #d4a930;
+    --gold-dark: #b08a1e;
+    --teal: #0e7d8a;
+    --text: #1c2840;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --cold: #0ea5e9;
+    --cold-bg: #eaf6fd;
+    --green: #15803d;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Segoe UI", -apple-system, Arial, sans-serif; background: var(--bg); color: var(--text); }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: #fff; padding: 28px 24px 24px;
+  }
+  .hwrap { max-width: 980px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .logo {
+    width: 52px; height: 52px; border-radius: 10px; background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 22px; color: var(--navy); letter-spacing: -1px;
+  }
+  .hname { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .hsub { font-size: 13px; color: #b9c4d8; margin-top: 2px; }
+  .hbadges { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .hbadge {
+    font-size: 11px; padding: 5px 10px; border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px; color: #cdd8ea;
+  }
+
+  main { max-width: 980px; margin: 26px auto 60px; padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 820px) { main { grid-template-columns: 1fr; } }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .card h2 { font-size: 16px; margin-bottom: 4px; }
+  .card .sub { font-size: 12.5px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+
+  label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin: 12px 0 5px; text-transform: uppercase; letter-spacing: 0.4px; }
+  input, select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
+    font-size: 14px; background: #fbfcfe; color: var(--text);
+  }
+  input:focus, select:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Location autocomplete */
+  .ac-wrap { position: relative; }
+  .ac-wrap input { padding-left: 30px; }
+  .ac-wrap .ac-pin { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font-size: 13px; pointer-events: none; z-index: 2; }
+  .ac-list {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff;
+    border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 22px rgba(14,29,52,0.14);
+    z-index: 40; max-height: 220px; overflow-y: auto; display: none;
+  }
+  .ac-list.show { display: block; }
+  .ac-item { padding: 9px 12px; font-size: 13.5px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .ac-item:hover, .ac-item.hl { background: var(--cold-bg); }
+  .ac-item .ac-state { font-size: 11px; color: var(--muted); }
+
+  /* Route preview strip - the fun part */
+  .route-strip {
+    display: none; align-items: center; gap: 10px; margin-top: 14px; padding: 14px 12px 10px;
+    background: linear-gradient(135deg, #fbfcfe 0%, var(--cold-bg) 100%); border: 1px solid var(--line);
+    border-radius: 12px; position: relative;
+  }
+  .route-strip.show { display: flex; }
+  .rs-pin { display: flex; flex-direction: column; align-items: center; font-size: 10.5px; font-weight: 700; color: var(--navy); flex: 0 0 auto; min-width: 50px; text-align: center; line-height: 1.3; }
+  .rs-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); margin-bottom: 4px; box-shadow: 0 0 0 3px #fdf3da; }
+  .rs-dot-b { background: var(--teal); box-shadow: 0 0 0 3px #e2f4f6; }
+  .rs-path { flex: 1 1 auto; position: relative; height: 20px; }
+  .rs-path svg { width: 100%; height: 100%; display: block; }
+  .rs-path path { fill: none; stroke: #c7d2e0; stroke-width: 2; stroke-dasharray: 4 5; }
+  .rs-truck { position: absolute; top: 45%; left: 2%; transform: translate(-50%, -60%); font-size: 16px; animation: rs-drive 1.7s ease-in-out 1; }
+  @keyframes rs-drive { from { left: 2%; } to { left: 98%; } }
+  .rs-dist {
+    position: absolute; right: 12px; top: -11px; background: var(--gold); color: var(--navy);
+    font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+  }
+  .auto-tag {
+    display: none; font-size: 9.5px; font-weight: 700; color: #0a6e7d; background: #e3f5f7;
+    border-radius: 8px; padding: 2px 7px; margin-left: 6px; text-transform: none; letter-spacing: 0; vertical-align: 1px;
+  }
+  .auto-tag.show { display: inline-block; }
+
+  .cargo-pick { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 5px; }
+  .cargo-btn {
+    border: 1.5px solid var(--line); border-radius: 10px; background: #fbfcfe;
+    padding: 11px 6px; text-align: center; cursor: pointer; font-size: 12.5px; font-weight: 600;
+    color: var(--muted); transition: all 0.15s;
+  }
+  .cargo-btn .ico { font-size: 19px; display: block; margin-bottom: 3px; }
+  .cargo-btn.sel { border-color: var(--cold); background: var(--cold-bg); color: var(--navy); }
+  .cargo-btn.sel-dry { border-color: var(--gold); background: #fdf7e7; color: var(--navy); }
+
+  .chk { display: flex; align-items: center; gap: 9px; margin-top: 11px; font-size: 13.5px; color: var(--text); }
+  .chk input { width: auto; }
+
+  .quote-btn {
+    width: 100%; margin-top: 20px; padding: 13px; border: none; border-radius: 10px;
+    background: var(--gold); color: var(--navy); font-size: 15px; font-weight: 800;
+    cursor: pointer; letter-spacing: 0.3px;
+  }
+  .quote-btn:hover { background: var(--gold-dark); color: #fff; }
+
+  .truck-note {
+    margin-top: 14px; font-size: 11.5px; color: var(--muted); line-height: 1.55;
+    border-top: 1px dashed var(--line); padding-top: 10px;
+  }
+
+  /* Quote output */
+  .placeholder { color: var(--muted); font-size: 13.5px; line-height: 1.6; padding: 14px 0; }
+  .price-hero { text-align: center; padding: 10px 0 14px; }
+  .price-hero .amt { font-size: 40px; font-weight: 800; color: var(--navy); }
+  .price-hero .lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .qline { display: flex; justify-content: space-between; font-size: 13.5px; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+  .qline .l { color: var(--muted); }
+  .qline .r { font-weight: 600; }
+  .qtotal { display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; padding: 11px 0 2px; }
+
+  .cold-panel {
+    margin-top: 16px; background: var(--cold-bg); border: 1.5px solid #bde3f7;
+    border-radius: 12px; padding: 15px 16px;
+  }
+  .cold-panel h3 { font-size: 13.5px; color: #075d80; display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
+  .cold-panel .csub { font-size: 11.5px; color: #4a7d96; margin-bottom: 10px; line-height: 1.5; }
+  .cold-panel .qline { border-color: #cfe9f7; }
+  .cold-panel .qline .l { color: #34728f; }
+  .cold-panel .qline .r { color: #075d80; }
+
+  .warn {
+    margin-top: 14px; background: #fdf1f1; border: 1px solid #f3c5c5; color: #9b3535;
+    font-size: 12.5px; border-radius: 10px; padding: 11px 13px; line-height: 1.55;
+  }
+  .ok-chip {
+    display: inline-block; margin-top: 12px; font-size: 11.5px; color: var(--green);
+    background: #ecf8ef; border: 1px solid #c9e9d2; border-radius: 20px; padding: 4px 11px;
+  }
+
+  footer {
+    max-width: 980px; margin: 0 auto 40px; padding: 0 24px;
+    font-size: 12px; color: var(--muted); line-height: 1.65; text-align: center;
+  }
+  footer .sep { border-top: 1px solid var(--line); padding-top: 16px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="logo">VC</div>
+    <div>
+      <div class="hname">VIRGO CARGO</div>
+      <div class="hsub">Refrigerated and dry freight - 26ft box truck - US lanes</div>
+    </div>
+    <div class="hbadges">
+      <span class="hbadge">DOT compliant</span>
+      <span class="hbadge">Temperature controlled</span>
+      <span class="hbadge">Instant pricing</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- LEFT: form -->
+  <section class="card">
+    <h2>Get an instant quote</h2>
+    <div class="sub">Enter your load details. The price calculates immediately - no phone call, no waiting on a quote by email.</div>
+
+    <div class="row2">
+      <div>
+        <label for="origin">Pickup (city or ZIP)</label>
+        <div class="ac-wrap">
+          <span class="ac-pin">&#128205;</span>
+          <input id="origin" type="text" placeholder="Atlanta, GA" value="Atlanta, GA" autocomplete="off"
+            oninput="acInput('origin')" onfocus="acRender('origin')" onkeydown="acKey('origin', event)">
+          <div class="ac-list" id="origin-ac"></div>
+        </div>
+      </div>
+      <div>
+        <label for="dest">Delivery (city or ZIP)</label>
+        <div class="ac-wrap">
+          <span class="ac-pin">&#127937;</span>
+          <input id="dest" type="text" placeholder="Miami, FL" value="Miami, FL" autocomplete="off"
+            oninput="acInput('dest')" onfocus="acRender('dest')" onkeydown="acKey('dest', event)">
+          <div class="ac-list" id="dest-ac"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="route-strip" id="route-strip">
+      <div class="rs-pin"><span class="rs-dot"></span><span id="rs-a-lbl"></span></div>
+      <div class="rs-path">
+        <svg viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M2,15 Q50,2 98,15"></path></svg>
+        <span class="rs-truck" id="rs-truck">&#128666;</span>
+      </div>
+      <div class="rs-pin"><span class="rs-dot rs-dot-b"></span><span id="rs-b-lbl"></span></div>
+      <div class="rs-dist" id="rs-dist"></div>
+    </div>
+
+    <label for="miles">Distance (miles) <span class="auto-tag" id="auto-tag">auto-filled</span></label>
+    <input id="miles" type="number" min="1" value="663" oninput="document.getElementById('auto-tag').classList.remove('show')">
+
+    <label>Cargo type</label>
+    <div class="cargo-pick">
+      <div class="cargo-btn sel-dry" id="cb-dry" onclick="setCargo('dry')"><span class="ico">&#128230;</span>Dry</div>
+      <div class="cargo-btn" id="cb-chill" onclick="setCargo('chilled')"><span class="ico">&#10052;&#65039;</span>Chilled<br>(34-40 F)</div>
+      <div class="cargo-btn" id="cb-frozen" onclick="setCargo('frozen')"><span class="ico">&#129482;</span>Frozen<br>(0 F or below)</div>
+    </div>
+
+    <div class="row2">
+      <div>
+        <label for="weight">Total weight (lbs)</label>
+        <input id="weight" type="number" min="1" value="4500">
+      </div>
+      <div>
+        <label for="pallets">Pallets</label>
+        <input id="pallets" type="number" min="1" max="20" value="6">
+      </div>
+    </div>
+
+    <div class="chk"><input id="liftgate" type="checkbox"> <span>Liftgate needed (no dock at pickup or delivery)</span></div>
+    <div class="chk"><input id="residential" type="checkbox"> <span>Residential pickup or delivery</span></div>
+
+    <button class="quote-btn" onclick="quote()">Calculate my price</button>
+
+    <div class="truck-note">
+      Equipment: 26ft refrigerated box truck. Up to 12 standard pallets / 10,000 lbs. The reefer unit (the truck's built-in cooling system) holds your set temperature for the entire run and logs it continuously.
+    </div>
+  </section>
+
+  <!-- RIGHT: quote -->
+  <section class="card">
+    <h2>Your quote</h2>
+    <div class="sub">Every charge itemized. Nothing hidden in the rate.</div>
+    <div id="quote-out">
+      <div class="placeholder">
+        Fill in your load details and press <strong>Calculate my price</strong>.<br><br>
+        Refrigerated loads show a full cold-chain breakdown - every cost of keeping your product at temperature, listed line by line. That transparency is why customers used this feature most.
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="sep">
+    This page is a faithful working reconstruction of the customer booking tool built for Virgo Cargo LLC, rebuilt in 2026 for portfolio demonstration. Original logic developed with Claude starting mid-2023, interface in HTML/CSS. The original eliminated manual quote generation - customers priced their own loads.<br>
+    Built by Simon Mukooza - mukoozasimon@gmail.com
+  </div>
+</footer>
+
+<script>
+var cargo = 'dry';
+
+// ---- Location autocomplete + auto-distance ----
+var CITY_DB = [
+  {n:"Atlanta, GA", lat:33.749, lon:-84.388}, {n:"Miami, FL", lat:25.762, lon:-80.192},
+  {n:"New York, NY", lat:40.713, lon:-74.006}, {n:"Los Angeles, CA", lat:34.052, lon:-118.244},
+  {n:"Chicago, IL", lat:41.878, lon:-87.630}, {n:"Dallas, TX", lat:32.777, lon:-96.797},
+  {n:"Houston, TX", lat:29.760, lon:-95.370}, {n:"Phoenix, AZ", lat:33.448, lon:-112.074},
+  {n:"Philadelphia, PA", lat:39.953, lon:-75.165}, {n:"San Antonio, TX", lat:29.424, lon:-98.494},
+  {n:"San Diego, CA", lat:32.716, lon:-117.161}, {n:"Jacksonville, FL", lat:30.332, lon:-81.656},
+  {n:"Columbus, OH", lat:39.961, lon:-82.999}, {n:"Charlotte, NC", lat:35.227, lon:-80.843},
+  {n:"Indianapolis, IN", lat:39.768, lon:-86.158}, {n:"San Francisco, CA", lat:37.775, lon:-122.419},
+  {n:"Seattle, WA", lat:47.606, lon:-122.332}, {n:"Denver, CO", lat:39.739, lon:-104.990},
+  {n:"Washington, DC", lat:38.907, lon:-77.037}, {n:"Nashville, TN", lat:36.163, lon:-86.781},
+  {n:"Oklahoma City, OK", lat:35.467, lon:-97.516}, {n:"El Paso, TX", lat:31.762, lon:-106.485},
+  {n:"Boston, MA", lat:42.361, lon:-71.058}, {n:"Portland, OR", lat:45.523, lon:-122.677},
+  {n:"Las Vegas, NV", lat:36.169, lon:-115.140}, {n:"Memphis, TN", lat:35.150, lon:-90.049},
+  {n:"Louisville, KY", lat:38.253, lon:-85.759}, {n:"Baltimore, MD", lat:39.290, lon:-76.612},
+  {n:"Milwaukee, WI", lat:43.039, lon:-87.906}, {n:"Albuquerque, NM", lat:35.085, lon:-106.649},
+  {n:"Tucson, AZ", lat:32.222, lon:-110.974}, {n:"Fresno, CA", lat:36.738, lon:-119.787},
+  {n:"Sacramento, CA", lat:38.582, lon:-121.494}, {n:"Kansas City, MO", lat:39.099, lon:-94.578},
+  {n:"Omaha, NE", lat:41.257, lon:-95.995}, {n:"Raleigh, NC", lat:35.780, lon:-78.638},
+  {n:"Minneapolis, MN", lat:44.978, lon:-93.265}, {n:"Tulsa, OK", lat:36.154, lon:-95.993},
+  {n:"Tampa, FL", lat:27.951, lon:-82.458}, {n:"New Orleans, LA", lat:29.951, lon:-90.072},
+  {n:"Wichita, KS", lat:37.688, lon:-97.336}, {n:"Cleveland, OH", lat:41.499, lon:-81.694},
+  {n:"St. Louis, MO", lat:38.627, lon:-90.199}, {n:"Pittsburgh, PA", lat:40.441, lon:-79.996},
+  {n:"Cincinnati, OH", lat:39.103, lon:-84.512}, {n:"Orlando, FL", lat:28.538, lon:-81.379},
+  {n:"Salt Lake City, UT", lat:40.761, lon:-111.891}, {n:"Richmond, VA", lat:37.541, lon:-77.436},
+  {n:"Birmingham, AL", lat:33.521, lon:-86.802}, {n:"Boise, ID", lat:43.615, lon:-116.203},
+  {n:"Spokane, WA", lat:47.659, lon:-117.426}, {n:"Des Moines, IA", lat:41.586, lon:-93.625},
+  {n:"Baton Rouge, LA", lat:30.451, lon:-91.187}, {n:"Buffalo, NY", lat:42.886, lon:-78.878},
+  {n:"Rochester, NY", lat:43.161, lon:-77.611}, {n:"Greensboro, NC", lat:36.073, lon:-79.792},
+  {n:"Norfolk, VA", lat:36.851, lon:-76.286}, {n:"Knoxville, TN", lat:35.961, lon:-83.921},
+  {n:"Savannah, GA", lat:32.081, lon:-81.091}, {n:"Charleston, SC", lat:32.777, lon:-79.931},
+  {n:"Little Rock, AR", lat:34.746, lon:-92.290}, {n:"Jackson, MS", lat:32.299, lon:-90.185},
+  {n:"Hartford, CT", lat:41.766, lon:-72.674}, {n:"Providence, RI", lat:41.824, lon:-71.413},
+  {n:"Detroit, MI", lat:42.331, lon:-83.046}, {n:"Columbia, SC", lat:34.001, lon:-81.035}
+];
+var acState = { origin: null, dest: null };
+var acHl = { origin: -1, dest: -1 };
+
+function haversineMiles(lat1, lon1, lat2, lon2) {
+  var R = 3958.8;
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLon = (lon2 - lon1) * Math.PI / 180;
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function acFilter(q) {
+  q = (q || '').toLowerCase().trim();
+  if (!q) return [];
+  return CITY_DB.filter(function (c) { return c.n.toLowerCase().indexOf(q) > -1; }).slice(0, 6);
+}
+
+function acRender(field) {
+  var input = document.getElementById(field);
+  var list = document.getElementById(field + '-ac');
+  var matches = acFilter(input.value);
+  acHl[field] = -1;
+  if (matches.length === 0) { list.classList.remove('show'); list.innerHTML = ''; list._matches = []; return; }
+  list._matches = matches;
+  list.innerHTML = matches.map(function (c, i) {
+    var parts = c.n.split(',');
+    return '<div class="ac-item" data-i="' + i + '" onmousedown="acPick(\'' + field + '\',' + i + ')">' +
+           '<span>' + parts[0] + '</span><span class="ac-state">' + parts[1].trim() + '</span></div>';
+  }).join('');
+  list.classList.add('show');
+}
+
+function acPick(field, i) {
+  var list = document.getElementById(field + '-ac');
+  var c = list._matches[i];
+  if (!c) return;
+  document.getElementById(field).value = c.n;
+  acState[field] = { lat: c.lat, lon: c.lon };
+  list.classList.remove('show');
+  acTryRoute();
+}
+
+function acInput(field) {
+  acState[field] = null;
+  acRender(field);
+  routeHide();
+}
+
+function acKey(field, e) {
+  var list = document.getElementById(field + '-ac');
+  if (!list.classList.contains('show')) return;
+  var items = list.querySelectorAll('.ac-item');
+  if (e.key === 'ArrowDown') { e.preventDefault(); acHl[field] = Math.min(acHl[field] + 1, items.length - 1); acHlRender(items, acHl[field]); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); acHl[field] = Math.max(acHl[field] - 1, 0); acHlRender(items, acHl[field]); }
+  else if (e.key === 'Enter') { if (acHl[field] >= 0) { e.preventDefault(); acPick(field, acHl[field]); } }
+  else if (e.key === 'Escape') { list.classList.remove('show'); }
+}
+
+function acHlRender(items, hl) {
+  for (var i = 0; i < items.length; i++) items[i].classList.toggle('hl', i === hl);
+}
+
+function abbrev(name) {
+  var parts = name.split(',');
+  return parts[0].trim() + (parts[1] ? ',' + parts[1] : '');
+}
+
+function routeShow(a, b, miles) {
+  document.getElementById('rs-a-lbl').textContent = abbrev(a);
+  document.getElementById('rs-b-lbl').textContent = abbrev(b);
+  document.getElementById('rs-dist').textContent = '~' + Math.round(miles).toLocaleString() + ' mi';
+  var strip = document.getElementById('route-strip');
+  var truck = document.getElementById('rs-truck');
+  strip.classList.remove('show');
+  truck.style.animation = 'none';
+  void strip.offsetWidth;
+  strip.classList.add('show');
+  truck.style.animation = '';
+}
+
+function routeHide() {
+  document.getElementById('route-strip').classList.remove('show');
+}
+
+function acTryRoute() {
+  if (acState.origin && acState.dest) {
+    var miles = Math.round(haversineMiles(acState.origin.lat, acState.origin.lon, acState.dest.lat, acState.dest.lon) * 1.17);
+    document.getElementById('miles').value = miles;
+    document.getElementById('auto-tag').classList.add('show');
+    routeShow(document.getElementById('origin').value, document.getElementById('dest').value, miles);
+    quote();
+  }
+}
+
+function acBoot() {
+  ['origin', 'dest'].forEach(function (field) {
+    var input = document.getElementById(field);
+    var match = CITY_DB.filter(function (c) { return c.n === input.value; })[0];
+    if (match) acState[field] = { lat: match.lat, lon: match.lon };
+  });
+  if (acState.origin && acState.dest) {
+    routeShow(document.getElementById('origin').value, document.getElementById('dest').value, parseFloat(document.getElementById('miles').value) || 0);
+  }
+}
+
+document.addEventListener('click', function (e) {
+  if (!e.target.closest('.ac-wrap')) {
+    document.getElementById('origin-ac').classList.remove('show');
+    document.getElementById('dest-ac').classList.remove('show');
+  }
+});
+
+function setCargo(c) {
+  cargo = c;
+  document.getElementById('cb-dry').className = 'cargo-btn' + (c === 'dry' ? ' sel-dry' : '');
+  document.getElementById('cb-chill').className = 'cargo-btn' + (c === 'chilled' ? ' sel' : '');
+  document.getElementById('cb-frozen').className = 'cargo-btn' + (c === 'frozen' ? ' sel' : '');
+  quote();
+}
+
+function money(n) { return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+function quote() {
+  var miles = parseFloat(document.getElementById('miles').value) || 0;
+  var weight = parseFloat(document.getElementById('weight').value) || 0;
+  var pallets = parseInt(document.getElementById('pallets').value) || 0;
+  var liftgate = document.getElementById('liftgate').checked;
+  var residential = document.getElementById('residential').checked;
+  var out = document.getElementById('quote-out');
+
+  if (miles <= 0 || weight <= 0 || pallets <= 0) {
+    out.innerHTML = '<div class="warn">Please enter distance, weight, and pallet count to price the load.</div>';
+    return;
+  }
+
+  var warns = [];
+  if (weight > 10000) warns.push('This load is over the 10,000 lb limit for a 26ft box truck. Call us - we will split the load or arrange a partner truck.');
+  if (pallets > 12) warns.push('More than 12 pallets will not fit on a 26ft box truck. Call us to plan a second run.');
+
+  // Base linehaul
+  var perMile = 2.20;
+  var linehaul = Math.max(miles * perMile, 350); // $350 minimum
+  var fuel = linehaul * 0.18;
+
+  // Weight adjustment above 6,000 lbs included
+  var weightAdj = weight > 6000 ? Math.ceil((weight - 6000) / 500) * 15 : 0;
+
+  var liftgateFee = liftgate ? 75 : 0;
+  var resFee = residential ? 40 : 0;
+
+  // Cold chain
+  var isCold = cargo !== 'dry';
+  var reeferFuel = 0, precool = 0, tempMon = 0, coldHandling = 0;
+  if (isCold) {
+    var coldRate = cargo === 'frozen' ? 0.55 : 0.45;
+    reeferFuel = miles * coldRate;
+    precool = cargo === 'frozen' ? 95 : 75;
+    tempMon = 50;
+    coldHandling = linehaul * 0.08;
+  }
+  var coldTotal = reeferFuel + precool + tempMon + coldHandling;
+  var total = linehaul + fuel + weightAdj + liftgateFee + resFee + coldTotal;
+
+  var html = '';
+  html += '<div class="price-hero"><div class="amt">' + money(total) + '</div><div class="lbl">all-in price, ' +
+          (cargo === 'dry' ? 'dry freight' : cargo === 'chilled' ? 'chilled at 34-40 F' : 'frozen at 0 F or below') +
+          ', ' + miles.toLocaleString() + ' miles</div></div>';
+
+  html += '<div class="qline"><span class="l">Linehaul (' + miles.toLocaleString() + ' mi at $' + perMile.toFixed(2) + '/mi, $350 minimum)</span><span class="r">' + money(linehaul) + '</span></div>';
+  html += '<div class="qline"><span class="l">Fuel surcharge (18% of linehaul)</span><span class="r">' + money(fuel) + '</span></div>';
+  if (weightAdj > 0) html += '<div class="qline"><span class="l">Weight over 6,000 lbs ($15 per extra 500 lbs)</span><span class="r">' + money(weightAdj) + '</span></div>';
+  if (liftgateFee > 0) html += '<div class="qline"><span class="l">Liftgate service</span><span class="r">' + money(liftgateFee) + '</span></div>';
+  if (resFee > 0) html += '<div class="qline"><span class="l">Residential stop</span><span class="r">' + money(resFee) + '</span></div>';
+
+  if (isCold) {
+    html += '<div class="cold-panel">';
+    html += '<h3>&#10052;&#65039; Refrigerated cargo breakdown</h3>';
+    html += '<div class="csub">Exactly what it costs to keep your product at temperature for the whole trip. No bundled "reefer fee" - every line explained.</div>';
+    html += '<div class="qline"><span class="l">Reefer fuel (cooling unit runs the entire trip)</span><span class="r">' + money(reeferFuel) + '</span></div>';
+    html += '<div class="qline"><span class="l">Pre-cool before loading (box chilled to set temp)</span><span class="r">' + money(precool) + '</span></div>';
+    html += '<div class="qline"><span class="l">Continuous temperature logging (record provided)</span><span class="r">' + money(tempMon) + '</span></div>';
+    html += '<div class="qline"><span class="l">Cold-chain handling (sealed transfer, no temp breaks)</span><span class="r">' + money(coldHandling) + '</span></div>';
+    html += '<div class="qtotal"><span>Cold-chain subtotal</span><span>' + money(coldTotal) + '</span></div>';
+    html += '</div>';
+  }
+
+  html += '<div class="qtotal"><span>Total</span><span>' + money(total) + '</span></div>';
+
+  for (var i = 0; i < warns.length; i++) html += '<div class="warn">' + warns[i] + '</div>';
+  if (warns.length === 0) html += '<div class="ok-chip">&#10003; Fits a 26ft box truck - ' + pallets + ' pallets, ' + weight.toLocaleString() + ' lbs</div>';
+
+  out.innerHTML = html;
+}
+
+// Price the default example on load so the page never looks empty
+quote();
+acBoot();
+</script>
+
+</body>
+</html>

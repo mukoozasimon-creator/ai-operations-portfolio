@@ -1,0 +1,3 @@
+/discovery / 301
+/discovery/ / 301
+/discovery/* /:splat 301

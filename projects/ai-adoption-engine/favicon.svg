@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AI Adoption Engine">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101c4a"/><stop offset="1" stop-color="#060b1e"/>
+    </linearGradient>
+    <linearGradient id="p" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7c62e6"/><stop offset="1" stop-color="#3a2c78"/>
+    </linearGradient>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3aa6e0"/><stop offset="1" stop-color="#1a5a9e"/>
+    </linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f0c53c"/><stop offset="1" stop-color="#9a6d14"/>
+    </linearGradient>
+    <linearGradient id="m" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#52b89b"/><stop offset="1" stop-color="#2b7159"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="13" fill="url(#bg)"/>
+  <circle cx="32" cy="14" r="11" fill="url(#p)"/>
+  <circle cx="50" cy="32" r="10" fill="url(#b)"/>
+  <circle cx="32" cy="50" r="10" fill="url(#g)"/>
+  <circle cx="14" cy="32" r="10" fill="url(#m)"/>
+  <circle cx="32" cy="32" r="5" fill="#0a1130"/>
+</svg>
