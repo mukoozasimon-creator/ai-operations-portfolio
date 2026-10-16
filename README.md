@@ -16,6 +16,12 @@ For an operational example, start with **Virgo Cargo**. For governance and usabi
 | [AI Adoption Engine](projects/ai-adoption-engine/) | [Open demo](https://ai-adoption-engine.netlify.app/) | An interactive reference model for trying, checking, sharing and improving AI use. Examples are invented; no live AI, accounts or business systems are connected. |
 | [TalentSync Ops](projects/talentsync-ops/) | [Open demo](https://talentsync-ops.netlify.app/) | A static concept for people, talent and customer success workflows, including guided puzzles and a sample workspace. Records are fictional and matching results are fixed examples. No live AI, database, messaging or calendar integration is connected. |
 
+## Empyrean Roots
+
+Research, community operations and project decisions across six Ugandan districts, connecting sustainability research, local facilitation and iterative project planning. Started January 2023.
+
+**[Open the Empyrean Roots research report (PDF)](research/empyrean-roots/Empyrean_Roots_Public_Research_Report.pdf)**
+
 ## Run locally
 
 Each project is self-contained static HTML, CSS and JavaScript, with its own README. Python 3 is sufficient for a local preview; no application API keys are needed.
