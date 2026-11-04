@@ -11,7 +11,7 @@ For commercial operations, start with **Virgo Cargo**. For AI project readiness 
 | Project | Live site | What you are looking at |
 | --- | --- | --- |
 | [Virgo Cargo Quote Engine](projects/virgo-cargo-quote-engine/) | [Open demo](https://virgo-cargo-quote-engine.netlify.app/) | A working browser-based reconstruction of a freight quoting interface. The original private Claude and Zapier workflow supported commercial operations and served multiple shippers. This snapshot does not include that private workflow, live rates, customer records or Zapier configuration. |
-| [Hold Short](#hold-short) | [Open tool](https://hold-short.netlify.app/) | An AI project readiness review with a 12-question quick check and a fuller review of up to 33 questions. Turns self-reported answers into risk flags, explanations and corrective actions. Educational decision support; not an audit, assurance or prediction of success. |
+| [Hold Short](#hold-short) | [Open tool](https://holdshort.netlify.app/) | An AI project readiness review with a 12-question quick check and a fuller review of up to 33 questions. Turns self-reported answers into risk flags, explanations and corrective actions. Educational decision support; not an audit, assurance or prediction of success. |
 | [Level Ground](#level-ground) | [Open tool](https://level-ground-plain-words.netlify.app/) | A searchable plain-language resource for technical and workplace terms, with consistent explanations, practical examples, pronunciation guidance and adjustable reading controls. Supports learning and self-service reference. |
 | [Shadow AI Posture Framework](projects/shadow-ai-posture/) | [Open demo](https://shadow-ai-posture.netlify.app/) | An interactive framework for inventorying AI tools, assessing exposure and recording decisions. It supports governance work; it does not enforce SSO, revoke credentials or certify compliance. The Ask panel depends on a Claude artifact environment and is not a general standalone AI integration. |
 | [AI Ops Control Room](projects/ai-ops-control-room/) | [Open demo](https://ai-ops-control-room.netlify.app/) | An interactive demonstration and learning tool explaining identity, access, ownership and operating controls. SSO, SCIM and RBAC are illustrated concepts, not connected enterprise services.
@@ -20,7 +20,7 @@ For commercial operations, start with **Virgo Cargo**. For AI project readiness 
 
 ## Hold Short
 
-**AI project readiness and decision support** | [Open Hold Short](https://hold-short.netlify.app/)
+**AI project readiness and decision support** | [Open Hold Short](https://holdshort.netlify.app/)
 
 I turned research on AI project failures into a structured review covering 29 risk areas across eight systems. Users can inspect the reasoning, see corrective actions and prepare a report for a project owner. The sample project, Larkspur Freight, is fictional and provides a quick way to explore the tool.
 
