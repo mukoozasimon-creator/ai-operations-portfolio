@@ -34,7 +34,7 @@ The check flags unresolved questions and leaves the decision with a person. Answ
 
 I built a resource for the technical and workplace words people are expected to already know. Each entry follows the same structure: what it is, what it looks like, where you meet it, the catch and an optional deeper explanation. Search, linked terms, pronunciation guidance and adjustable reading controls help readers choose their own depth and pace.
 
-The live resource contained 302 entries across seven categories when checked on 2 November 2026. Individual entries can be shared, and Hold Short links directly to relevant explanations.
+The live resource contains 325 entries across seven categories, verified on 4 November 2026. Individual entries can be shared, and Hold Short links directly to relevant explanations.
 
 **What it demonstrates:** clear documentation, structured learning content, attention to different reading needs and practical support for unfamiliar systems.
 
