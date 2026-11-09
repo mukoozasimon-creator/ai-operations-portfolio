@@ -1,8 +1,12 @@
 # AI Operations Portfolio
 
-I build tools around the people who have to use them: clear language, manageable steps and an explanation of what happens next. This repo is a small window into that work.
+Plain-language learning and enablement | Open Level Ground
 
-Claude & Codex for software development. I frame the problem, direct the build, review the output, test behavior, and repair failures. This portfolio combines source snapshots and live tools. Each entry explains what is implemented, what is illustrative and what it demonstrates.
+I built a resource for the technical and workplace words people are expected to already know. Each entry follows the same structure: what it is, what it looks like, where you meet it, the catch and an optional deeper explanation. Search, linked terms, pronunciation guidance and adjustable reading controls help readers choose their own depth and pace.
+
+More than 400 technical and workplace terms, explained in plain language with practical examples. Individual entries can be shared, and Hold Short links directly to relevant explanations.
+
+What it demonstrates: clear documentation, structured learning content, attention to different reading needs and practical support for unfamiliar systems.
 
 ## Start here
 
