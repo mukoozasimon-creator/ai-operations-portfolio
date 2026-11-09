@@ -32,8 +32,6 @@ The check flags unresolved questions and leaves the decision with a person. Answ
 
 **Plain-language learning and enablement** | [Open Level Ground](https://level-ground-plain-words.netlify.app/)
 
-Plain-language learning and enablement | Open Level Ground
-
 I built a resource for the technical and workplace words people are expected to already know. Each entry follows the same structure: what it is, what it looks like, where you meet it, the catch and an optional deeper explanation. Search, linked terms, pronunciation guidance and adjustable reading controls help readers choose their own depth and pace.
 
 More than 400 technical and workplace terms, explained in plain language with practical examples. Individual entries can be shared, and Hold Short links directly to relevant explanations.
