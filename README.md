@@ -2,7 +2,7 @@
 
 I build tools around the people who have to use them: clear language, manageable steps and an explanation of what happens next. This repo is a small window into that work.
 
-Claude, Grok, Cursor, kimi, Codex, etc., for software development. I frame the problem, direct the build, review the output, test behavior, and repair failures. This portfolio combines source snapshots and live tools. Each entry explains what is implemented, what is illustrative and what it demonstrates.
+Claude, Grok, Cursor, Kimi, Codex, etc., for software development. I frame the problem, direct the build, review the output, test behavior, and repair failures. This portfolio combines source snapshots and live tools. Each entry explains what is implemented, what is illustrative and what it demonstrates.
 
 ## Start here
 
