@@ -64,7 +64,7 @@ Existing tests are included where available; this export does not claim a fresh 
 
 ## Attribution and reuse
 
-Created by Simon Mukooza with Agentic AI. Existing project and third-party license notices remain in their respective folders. Shadow AI Posture retains its CC BY 4.0 notice. No blanket license is granted for the remaining code or assets in this repository.
+Created by Simon Mukooza with Agentic AI. Existing project and third-party license notices remain in their respective folders. Shadow AI Posture retains its CC BY 4.0 notice. No blanket license is granted for the remaining code or assets in this repository. Ask away!
 
 [Simon Mukooza on LinkedIn](https://www.linkedin.com/in/simonmukooza/)
 
